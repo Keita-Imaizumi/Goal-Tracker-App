@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "694185448383",
+    "project_id": "goal-tracker-app-f261e",
+    "storage_bucket": "goal-tracker-app-f261e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694185448383:android:8565f4f55fa0fa56b0c70a",
+        "android_client_info": {
+          "package_name": "com.example.goal_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694185448383-or1bdo12hu3aoi0hfqqm7ohkjrbcfnj2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.goal_tracker",
+            "certificate_hash": "9b667ee9fcba89be4318017928c006ad16a377ab"
+          }
+        },
+        {
+          "client_id": "694185448383-s82j31a3h3s7isdfmivoao85t9nakn1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqaadpsBIjVw6j0gvjSoIQYMi_NslGk5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "694185448383-s82j31a3h3s7isdfmivoao85t9nakn1j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "694185448383-g59ugpb9kbcvonv8c1iofqmcp5atq593.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterGoalTracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
