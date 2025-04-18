@@ -1,18 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../goals/data/goals.dart';
 import '../services/auth_service.dart';
 
-class LoginScreen extends StatefulWidget {
+final userProvider = StateProvider<User?>((ref) => null); // ログイン済みユーザー保持
+
+final goalRepositoryProvider = Provider((ref) => GoalRepository());
+
+final userGoalsProvider = StreamProvider<List<Goal>>((ref) {
+  final user = ref.watch(userProvider);
+  if (user == null) return const Stream.empty();
+  return ref.watch(goalRepositoryProvider).streamGoalsForUser(user.uid);
+});
+
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   // FirebaseAuthインスタンスを取得
   final FirebaseAuth _auth = FirebaseAuth.instance;
   // GoogleSignInインスタンスを取得
@@ -102,7 +114,8 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () async {
                 final user = await AuthService().signInWithGoogle();
                 if (user != null) {
-                  context.go('/dashboard');
+                  ref.read(userProvider.notifier).state = user;
+                  context.go('/dashboard/');
                 }
               },
               icon: const Icon(Icons.login),

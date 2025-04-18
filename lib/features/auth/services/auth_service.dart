@@ -27,8 +27,37 @@ class AuthService {
     return userCredential.user;
   }
 
+  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential.user;
+  }
+
+  Future<User?> signUpWithEmailAndPassword(String email, String password) async {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential.user;
+  }
+
+  /// パスワードリセットメールを送信
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
+  }
+
+  /// サインアウト（Google含む）
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    try {
+      await _googleSignIn.signOut();
+    } catch (_) {
+      // ignore: GoogleSignInが使用されていない場合
+    }
     await _auth.signOut();
   }
+
+  /// 現在のユーザーを取得
+  User? get currentUser => _auth.currentUser;
 }
