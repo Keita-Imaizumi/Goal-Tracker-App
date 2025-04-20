@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:goal_tracker/features/auth/services/auth_service.dart';
 import 'package:uuid/uuid.dart';
 import '../../auth/screens/login_screen.dart';
 import '../data/goals.dart';
@@ -11,7 +13,25 @@ class DashboardScreen extends ConsumerWidget {
     final goalsAsync = ref.watch(userGoalsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('マイゴール')),
+      appBar: AppBar(
+        title: const Text('マイゴール'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'ログアウト',
+            onPressed: () async {
+              // Googleサインアウト処理
+              await AuthService().signOut();
+              ref.read(userProvider.notifier).state = null;
+
+              // 任意: ログイン画面へ戻る
+              if (context.mounted) {
+                context.go('/login');
+              }
+            },
+          ),
+        ],
+      ),
       body: goalsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('エラー: $e')),
@@ -22,7 +42,7 @@ class DashboardScreen extends ConsumerWidget {
             return ListTile(
               title: Text(goal.title),
               subtitle: Text('状態: ${goal.status}'),
-              onLongPress: () async{
+              onLongPress: () async {
                 final user = ref.read(userProvider);
                 if (user == null) return;
 
@@ -45,7 +65,6 @@ class DashboardScreen extends ConsumerWidget {
           );
 
           await ref.read(goalRepositoryProvider).addGoal(user.uid, goal);
-          // Add your onPressed code here!
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
@@ -53,3 +72,4 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 }
+

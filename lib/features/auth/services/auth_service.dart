@@ -102,6 +102,17 @@ class AuthService {
     }
   }
 
+  Future<User?> signInWithEmail(String email, String password) async {
+    try {
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      return credential.user;
+    } catch (e) {
+      print('ログインエラー: $e');
+      return null;
+    }
+  }
+
   /// サインアウト（Google含む）
   Future<void> signOut() async {
     try {

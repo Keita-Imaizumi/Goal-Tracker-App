@@ -52,10 +52,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  void _onLoginPressed() {
+  void _onLoginPressed() async{
     final email = emailController.text;
     final password = passwordController.text;
-    // TODO: ログイン処理を追加
+    final user = await AuthService().signInWithEmail(email, password);
+    if (user != null) {
+      ref.read(userProvider.notifier).state = user;
+      context.go('/dashboard/');
+    }
     print('ログイン: $email / $password');
   }
 
@@ -136,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             TextButton(
               onPressed: () {
-                context.go('/register');
+                context.push('/register');
               },
               child: const Text('アカウントをお持ちでない方はこちらから新規登録'),
             ),
