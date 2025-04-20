@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore:
   google_sign_in: ^6.3.0
   flutter_riverpod:
+  uuid:
 
 dev_dependencies:
   flutter_test:

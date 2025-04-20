@@ -5,11 +5,14 @@ import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../goals/data/goals.dart';
+import '../../goals/services/goal_repository.dart';
+import '../../goals/services/goal_service.dart';
 import '../services/auth_service.dart';
 
 final userProvider = StateProvider<User?>((ref) => null); // ログイン済みユーザー保持
 
 final goalRepositoryProvider = Provider((ref) => GoalRepository());
+final goalListProvider = StateProvider<List<Goal>>((ref) => []);
 
 final userGoalsProvider = StreamProvider<List<Goal>>((ref) {
   final user = ref.watch(userProvider);
@@ -115,6 +118,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 final user = await AuthService().signInWithGoogle();
                 if (user != null) {
                   ref.read(userProvider.notifier).state = user;
+
+                  final goals = await GoalService().fetchGoals(user.uid);
+                  ref.read(goalListProvider.notifier).state = goals;
                   context.go('/dashboard/');
                 }
               },
@@ -127,6 +133,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             TextButton(
               onPressed: _onResetPassword,
               child: const Text('パスワードを忘れた場合はこちら'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.go('/register');
+              },
+              child: const Text('アカウントをお持ちでない方はこちらから新規登録'),
             ),
           ],
         ),

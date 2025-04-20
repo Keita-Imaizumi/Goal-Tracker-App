@@ -1,5 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../screens/login_screen.dart';
 
 class AuthService {
   // FirebaseAuthインスタンスを取得
@@ -27,12 +33,54 @@ class AuthService {
     return userCredential.user;
   }
 
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
-    final userCredential = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return userCredential.user;
+  Future<User?> signUpWithEmail(String email, String password) async {
+    try {
+      final UserCredential credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return credential.user;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          print('このメールアドレスは既に使用されています。');
+          break;
+        case 'invalid-email':
+          print('メールアドレスの形式が正しくありません。');
+          break;
+        case 'weak-password':
+          print('パスワードが弱すぎます。');
+          break;
+        default:
+          print('新規登録時に予期しないエラー: ${e.code}');
+      }
+      return null;
+    } catch (e) {
+      print('その他のエラー: $e');
+      return null;
+    }
+  }
+
+  Future<void> registerWithEmailAndPassword(
+      BuildContext context, WidgetRef ref, String email, String password) async {
+    // バリデーション（例: 空チェック）
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('メールアドレスとパスワードを入力してください')),
+      );
+      return;
+    }
+
+    // 登録処理
+    final user = await AuthService().signUpWithEmail(email, password);
+    if (user != null) {
+      ref.read(userProvider.notifier).state = user;
+      context.go('/dashboard/');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('登録に失敗しました')),
+      );
+    }
   }
 
   Future<User?> signUpWithEmailAndPassword(String email, String password) async {
@@ -43,9 +91,15 @@ class AuthService {
     return userCredential.user;
   }
 
-  /// パスワードリセットメールを送信
-  Future<void> sendPasswordResetEmail(String email) async {
-    await _auth.sendPasswordResetEmail(email: email);
+  Future<bool> checkIfEmailExists(String email) async {
+    try {
+      final methods =
+      await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      return methods.isNotEmpty;
+    } catch (e) {
+      print('メール確認エラー: $e');
+      return false;
+    }
   }
 
   /// サインアウト（Google含む）
