@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goal_tracker/features/auth/services/auth_service.dart';
+import 'package:goal_tracker/features/auth/view_model/login_view_model.dart';
 import 'package:uuid/uuid.dart';
-import '../../auth/screens/login_screen.dart';
+
+import '../../auth/provider/auth_provider.dart';
 import '../data/goals.dart';
+import '../provider/goals_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   DashboardScreen({super.key});
@@ -23,6 +26,9 @@ class DashboardScreen extends ConsumerWidget {
               // Googleサインアウト処理
               await AuthService().signOut();
               ref.read(userProvider.notifier).state = null;
+
+              final viewModel = ref.read(loginViewModelProvider.notifier);
+              viewModel.resetLoginState();
 
               // 任意: ログイン画面へ戻る
               if (context.mounted) {

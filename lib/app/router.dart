@@ -1,12 +1,11 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goal_tracker/features/auth/screens/login_screen.dart';
 import 'package:goal_tracker/features/goals/screens/dashboard_screen.dart';
 
-import '../features/auth/screens/signup_screen.dart';
-import '../features/splash/splash_screen.dart';
+import '../features/auth/view/login_screen.dart';
+import '../features/auth/view/signup_screen.dart';
+import '../features/splash/view/splash_screen.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -23,21 +22,6 @@ class MyApp extends StatelessWidget {
         ),
         GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
         GoRoute(path: '/register', builder: (context, state) => SignupScreen()),
-        // GoRoute(
-        //     path: '/redirect',
-        //     redirect: (context, state) async{
-        //       if(await checkLoggedIn()){
-        //         return '/home';
-        //       }
-        //       else {
-        //         return '/login';
-        //       }
-        //     }
-        // ),
-        // GoRoute(
-        //   path: '/detail/:$id',
-        //   builder: (context, state) => DetailsScreen(),
-        // ),
       ],
   );// This widget is the root of your application.
   @override
