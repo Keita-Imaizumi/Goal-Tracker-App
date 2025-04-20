@@ -72,7 +72,7 @@ class AuthService {
     }
 
     // 登録処理
-    final user = await AuthService().signUpWithEmail(email, password);
+    final user = await signUpWithEmail(email, password);
     if (user != null) {
       ref.read(userProvider.notifier).state = user;
       context.go('/dashboard/');
@@ -81,14 +81,6 @@ class AuthService {
         const SnackBar(content: Text('登録に失敗しました')),
       );
     }
-  }
-
-  Future<User?> signUpWithEmailAndPassword(String email, String password) async {
-    final userCredential = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return userCredential.user;
   }
 
   Future<bool> checkIfEmailExists(String email) async {
