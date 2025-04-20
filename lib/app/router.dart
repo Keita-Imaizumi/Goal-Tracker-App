@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:goal_tracker/features/auth/screens/login_screen.dart';
 import 'package:goal_tracker/features/goals/screens/dashboard_screen.dart';
 
+import '../features/auth/screens/signup_screen.dart';
 import '../features/splash/splash_screen.dart';
 
 
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
           path: '/dashboard',
           builder: (context, state) => DashboardScreen(),
         ),
-        GoRoute(path: '/login', builder: (context, state) => LoginScreen())
+        GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
+        GoRoute(path: '/register', builder: (context, state) => SignupScreen()),
         // GoRoute(
         //     path: '/redirect',
         //     redirect: (context, state) async{

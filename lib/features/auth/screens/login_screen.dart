@@ -1,15 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginScreen extends StatefulWidget {
+import '../../goals/data/goals.dart';
+import '../../goals/services/goal_repository.dart';
+import '../../goals/services/goal_service.dart';
+import '../services/auth_service.dart';
+
+final userProvider = StateProvider<User?>((ref) => null); // ログイン済みユーザー保持
+
+final goalRepositoryProvider = Provider((ref) => GoalRepository());
+final goalListProvider = StateProvider<List<Goal>>((ref) => []);
+
+final userGoalsProvider = StreamProvider<List<Goal>>((ref) {
+  final user = ref.watch(userProvider);
+  if (user == null) return const Stream.empty();
+  return ref.watch(goalRepositoryProvider).streamGoalsForUser(user.uid);
+});
+
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   // FirebaseAuthインスタンスを取得
   final FirebaseAuth _auth = FirebaseAuth.instance;
   // GoogleSignInインスタンスを取得
@@ -39,54 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = passwordController.text;
     // TODO: ログイン処理を追加
     print('ログイン: $email / $password');
-  }
-
-  Future<User?> signInWithGoogle() async {
-    try {
-      // Googleサインインを実行
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        // キャンセルされた場合はnullを返す
-        return null;
-      }
-
-      // Googleの認証情報を取得
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      // Firebase用の資格情報を作成
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Firebaseに認証情報を登録
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
-      final User? user = userCredential.user;
-
-      setState(() {
-        // ログインしたユーザー情報を取得し画面更新
-        _user = user;
-      });
-      return user;
-
-    } catch (e) {
-      print("Error during Google Sign In: $e");
-      return null;
-    }
-  }
-  // サインアウトメソッド
-  Future<void> signOut() async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-    setState(() {
-      _user = null;
-    });
-  }
-
-
-  void _onGoogleLogin() {
-    // TODO: Googleログイン処理を追加
-    print('Googleログイン');
   }
 
   void _onResetPassword() {
@@ -144,7 +114,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
             // Googleログイン
             OutlinedButton.icon(
-              onPressed: signInWithGoogle,
+              onPressed: () async {
+                final user = await AuthService().signInWithGoogle();
+                if (user != null) {
+                  ref.read(userProvider.notifier).state = user;
+
+                  final goals = await GoalService().fetchGoals(user.uid);
+                  ref.read(goalListProvider.notifier).state = goals;
+                  context.go('/dashboard/');
+                }
+              },
               icon: const Icon(Icons.login),
               label: const Text('Googleアカウントでログイン'),
             ),
@@ -154,6 +133,12 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               onPressed: _onResetPassword,
               child: const Text('パスワードを忘れた場合はこちら'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.go('/register');
+              },
+              child: const Text('アカウントをお持ちでない方はこちらから新規登録'),
             ),
           ],
         ),
