@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goal_tracker/features/auth/view_model/login_view_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../auth/model/auth_service.dart';

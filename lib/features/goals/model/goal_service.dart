@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../model/goals.dart';
+import 'goals.dart';
 
 class GoalService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
