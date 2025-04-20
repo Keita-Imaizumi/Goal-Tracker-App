@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../goals/provider/goals_provider.dart';
 import '../../goals/services/goal_service.dart';
+import '../model/auth_service.dart';
 import '../provider/auth_provider.dart';
-import '../services/auth_service.dart';
 
 final loginViewModelProvider = StateNotifierProvider<LoginViewModel, AsyncValue<void>>((ref) {
   return LoginViewModel(ref);

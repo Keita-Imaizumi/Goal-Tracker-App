@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/provider/auth_provider.dart';
-import '../data/goals.dart';
+import '../model/goals.dart';
 import '../services/goal_repository.dart';
 
 final goalRepositoryProvider = Provider((ref) => GoalRepository());

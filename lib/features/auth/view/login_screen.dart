@@ -83,12 +83,12 @@ class LoginScreen extends ConsumerWidget {
             const SizedBox(height: 8),
 
             // パスワード再設定
-            TextButton(
-              onPressed: () {
-                // TODO: パスワード再設定
-              },
-              child: const Text('パスワードを忘れた場合はこちら'),
-            ),
+            // TextButton(
+            //   onPressed: () {
+            //     // TODO: パスワード再設定
+            //   },
+            //   child: const Text('パスワードを忘れた場合はこちら'),
+            // ),
             TextButton(
               onPressed: () {
                 context.push('/register');
