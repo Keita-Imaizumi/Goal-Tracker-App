@@ -45,6 +45,11 @@ class DashboardScreen extends ConsumerWidget {
           itemBuilder: (_, index) {
             final goal = goals[index];
             return ListTile(
+              leading: Checkbox(
+                  value: goal.done,
+                  onChanged: (checked){
+                    print('toggled');
+                    }),
               title: Text(goal.title),
               subtitle: Text('状態: ${goal.status}'),
               onLongPress: () async {

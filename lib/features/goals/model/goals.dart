@@ -1,33 +1,32 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Goal {
-  final String id;
-  final String title;
-  final String status;
-  final DateTime? deadline;
+part 'goals.freezed.dart';
+part 'goals.g.dart';
 
-  Goal({
-    required this.id,
-    required this.title,
-    required this.status,
-    this.deadline,
-  });
+@freezed
+class Goal with _$Goal {
+  const factory Goal({
+    required String id,
+    required String title,
+    required String status,
+    String? detail,
+    DateTime? deadline,
+    @Default(false) bool done,
+  }) = _Goal;
 
-  factory Goal.fromMap(String id, Map<String, dynamic> data) {
-    return Goal(
-      id: id,
-      title: data['title'],
-      status: data['status'],
-      deadline: (data['deadline'] as Timestamp?)?.toDate(),
-    );
-  }
+  factory Goal.fromJson(Map<String, dynamic> json) => _$GoalFromJson(json);
+}
 
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'status': status,
-      'deadline': deadline,
-    };
+Goal goalFromFirestore(String id, Map<String, dynamic> data) {
+  return Goal.fromJson({...data, 'id': id});
+}
+
+extension GoalFirestore on Goal {
+  Map<String, dynamic> toFirestore() {
+    final json = toJson();
+    json.remove('id');
+    return json;
   }
 }
+
 

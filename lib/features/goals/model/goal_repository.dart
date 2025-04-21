@@ -15,7 +15,7 @@ class GoalRepository {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
-          .map((doc) => Goal.fromMap(doc.id, doc.data()))
+          .map((doc) => goalFromFirestore(doc.id, doc.data()))
           .toList();
     });
   }
