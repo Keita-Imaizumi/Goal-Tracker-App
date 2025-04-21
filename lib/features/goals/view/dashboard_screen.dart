@@ -63,23 +63,86 @@ class DashboardScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final user = ref.read(userProvider);
-          if (user == null) return;
-
-          final goal = Goal(
-            id: const Uuid().v4(),
-            title: '英単語100個覚える',
-            status: 'todo',
-            deadline: DateTime.now().add(const Duration(days: 3)),
-          );
-
-          await ref.read(goalRepositoryProvider).addGoal(user.uid, goal);
-        },
+        onPressed: () => _showGoalInputDialog(context, ref),
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
       ),
     );
   }
+
+  void _showGoalInputDialog(BuildContext context, WidgetRef ref) {
+    final titleController = TextEditingController();
+    final detailController = TextEditingController();
+    final statusController = TextEditingController();
+    DateTime? selectedDate;
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('目標を追加'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'タイトル'),
+                ),
+                TextField(
+                  controller: detailController,
+                  decoration: const InputDecoration(labelText: '詳細'),
+                ),
+                TextField(
+                  controller: statusController,
+                  decoration: const InputDecoration(labelText: '状態'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2100),
+                    );
+                    if (pickedDate != null) {
+                      selectedDate = pickedDate;
+                    }
+                  },
+                  child: const Text('締切日を選択'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('キャンセル'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final user = ref.read(userProvider);
+                if (user == null) return;
+
+                final goal = Goal(
+                  id: const Uuid().v4(),
+                  title: titleController.text,
+                  detail: detailController.text,
+                  status: statusController.text,
+                  deadline: selectedDate,
+                );
+
+                ref
+                    .read(goalViewModelProvider.notifier)
+                    .addGoal(goal, user.uid);
+                Navigator.of(context).pop();
+              },
+              child: const Text('作成'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
 

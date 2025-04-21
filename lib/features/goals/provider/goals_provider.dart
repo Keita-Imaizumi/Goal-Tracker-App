@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:goal_tracker/features/goals/view_model/goal_view_model.dart';
 
 import '../../auth/provider/auth_provider.dart';
-import '../../auth/view_model/login_view_model.dart';
+import '../model/goal_service.dart';
 import '../model/goals.dart';
 import '../model/goal_repository.dart';
 
@@ -13,7 +14,9 @@ final userGoalsProvider = StreamProvider<List<Goal>>((ref) {
   if (user == null) return const Stream.empty();
   return ref.watch(goalRepositoryProvider).streamGoalsForUser(user.uid);
 });
-final loginViewModelProvider = StateNotifierProvider<LoginViewModel, AsyncValue<void>>((ref) {
-  return LoginViewModel(ref);
+final goalViewModelProvider =
+StateNotifierProvider<GoalViewModel, AsyncValue<void>>((ref) {
+  final service = GoalService(); // Service をここで使う
+  return GoalViewModel(service);
 });
 
