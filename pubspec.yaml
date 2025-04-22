@@ -37,9 +37,9 @@ dependencies:
   go_router: ^12.1.0
   firebase_core: ^3.13.0
   firebase_auth: ^5.5.2
-  cloud_firestore:
+  cloud_firestore: ^5.5.0
   google_sign_in: ^6.3.0
-  flutter_riverpod:
+  flutter_riverpod: ^2.5.1
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
   uuid:
@@ -47,7 +47,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.7
+  build_runner: ^2.4.6
   freezed: ^2.4.6
   json_serializable: ^6.7.1
 

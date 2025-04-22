@@ -25,6 +25,7 @@ mixin _$Goal {
   String get title => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String? get detail => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
   DateTime? get deadline => throw _privateConstructorUsedError;
   bool get done => throw _privateConstructorUsedError;
 
@@ -47,7 +48,7 @@ abstract class $GoalCopyWith<$Res> {
     String title,
     String status,
     String? detail,
-    DateTime? deadline,
+    @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) DateTime? deadline,
     bool done,
   });
 }
@@ -125,7 +126,7 @@ abstract class _$$GoalImplCopyWith<$Res> implements $GoalCopyWith<$Res> {
     String title,
     String status,
     String? detail,
-    DateTime? deadline,
+    @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) DateTime? deadline,
     bool done,
   });
 }
@@ -194,7 +195,7 @@ class _$GoalImpl implements _Goal {
     required this.title,
     required this.status,
     this.detail,
-    this.deadline,
+    @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) this.deadline,
     this.done = false,
   });
 
@@ -210,6 +211,7 @@ class _$GoalImpl implements _Goal {
   @override
   final String? detail;
   @override
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
   final DateTime? deadline;
   @override
   @JsonKey()
@@ -259,6 +261,7 @@ abstract class _Goal implements Goal {
     required final String title,
     required final String status,
     final String? detail,
+    @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
     final DateTime? deadline,
     final bool done,
   }) = _$GoalImpl;
@@ -274,6 +277,7 @@ abstract class _Goal implements Goal {
   @override
   String? get detail;
   @override
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
   DateTime? get deadline;
   @override
   bool get done;
