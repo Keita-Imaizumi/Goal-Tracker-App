@@ -28,6 +28,7 @@ mixin _$Goal {
   @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
   DateTime? get deadline => throw _privateConstructorUsedError;
   bool get done => throw _privateConstructorUsedError;
+  List<Tag> get tags => throw _privateConstructorUsedError;
 
   /// Serializes this Goal to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,6 +51,7 @@ abstract class $GoalCopyWith<$Res> {
     String? detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) DateTime? deadline,
     bool done,
+    List<Tag> tags,
   });
 }
 
@@ -74,6 +76,7 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
     Object? detail = freezed,
     Object? deadline = freezed,
     Object? done = null,
+    Object? tags = null,
   }) {
     return _then(
       _value.copyWith(
@@ -107,6 +110,11 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
                     ? _value.done
                     : done // ignore: cast_nullable_to_non_nullable
                         as bool,
+            tags:
+                null == tags
+                    ? _value.tags
+                    : tags // ignore: cast_nullable_to_non_nullable
+                        as List<Tag>,
           )
           as $Val,
     );
@@ -128,6 +136,7 @@ abstract class _$$GoalImplCopyWith<$Res> implements $GoalCopyWith<$Res> {
     String? detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) DateTime? deadline,
     bool done,
+    List<Tag> tags,
   });
 }
 
@@ -149,6 +158,7 @@ class __$$GoalImplCopyWithImpl<$Res>
     Object? detail = freezed,
     Object? deadline = freezed,
     Object? done = null,
+    Object? tags = null,
   }) {
     return _then(
       _$GoalImpl(
@@ -182,6 +192,11 @@ class __$$GoalImplCopyWithImpl<$Res>
                 ? _value.done
                 : done // ignore: cast_nullable_to_non_nullable
                     as bool,
+        tags:
+            null == tags
+                ? _value._tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                    as List<Tag>,
       ),
     );
   }
@@ -197,7 +212,8 @@ class _$GoalImpl implements _Goal {
     this.detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) this.deadline,
     this.done = false,
-  });
+    final List<Tag> tags = const [],
+  }) : _tags = tags;
 
   factory _$GoalImpl.fromJson(Map<String, dynamic> json) =>
       _$$GoalImplFromJson(json);
@@ -216,10 +232,18 @@ class _$GoalImpl implements _Goal {
   @override
   @JsonKey()
   final bool done;
+  final List<Tag> _tags;
+  @override
+  @JsonKey()
+  List<Tag> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tags);
+  }
 
   @override
   String toString() {
-    return 'Goal(id: $id, title: $title, status: $status, detail: $detail, deadline: $deadline, done: $done)';
+    return 'Goal(id: $id, title: $title, status: $status, detail: $detail, deadline: $deadline, done: $done, tags: $tags)';
   }
 
   @override
@@ -233,13 +257,22 @@ class _$GoalImpl implements _Goal {
             (identical(other.detail, detail) || other.detail == detail) &&
             (identical(other.deadline, deadline) ||
                 other.deadline == deadline) &&
-            (identical(other.done, done) || other.done == done));
+            (identical(other.done, done) || other.done == done) &&
+            const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, title, status, detail, deadline, done);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    title,
+    status,
+    detail,
+    deadline,
+    done,
+    const DeepCollectionEquality().hash(_tags),
+  );
 
   /// Create a copy of Goal
   /// with the given fields replaced by the non-null parameter values.
@@ -264,6 +297,7 @@ abstract class _Goal implements Goal {
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
     final DateTime? deadline,
     final bool done,
+    final List<Tag> tags,
   }) = _$GoalImpl;
 
   factory _Goal.fromJson(Map<String, dynamic> json) = _$GoalImpl.fromJson;
@@ -281,6 +315,8 @@ abstract class _Goal implements Goal {
   DateTime? get deadline;
   @override
   bool get done;
+  @override
+  List<Tag> get tags;
 
   /// Create a copy of Goal
   /// with the given fields replaced by the non-null parameter values.

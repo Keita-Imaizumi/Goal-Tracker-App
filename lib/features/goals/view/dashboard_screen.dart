@@ -6,7 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../auth/model/auth_service.dart';
 import '../../auth/provider/auth_provider.dart';
-import '../model/goal.dart';
+import '../model/goal/goal.dart';
 import '../provider/goals_provider.dart';
 import '../view_model/goal_view_model.dart';
 

@@ -13,6 +13,11 @@ _$GoalImpl _$$GoalImplFromJson(Map<String, dynamic> json) => _$GoalImpl(
   detail: json['detail'] as String?,
   deadline: _fromTimestamp(json['deadline']),
   done: json['done'] as bool? ?? false,
+  tags:
+      (json['tags'] as List<dynamic>?)
+          ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$$GoalImplToJson(_$GoalImpl instance) =>
@@ -23,4 +28,5 @@ Map<String, dynamic> _$$GoalImplToJson(_$GoalImpl instance) =>
       'detail': instance.detail,
       'deadline': _toTimestamp(instance.deadline),
       'done': instance.done,
+      'tags': instance.tags,
     };

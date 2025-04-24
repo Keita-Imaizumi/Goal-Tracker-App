@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../tag/tag.dart';
+
 part 'goal.freezed.dart';
 part 'goal.g.dart';
 
@@ -14,6 +16,8 @@ class Goal with _$Goal {
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
     DateTime? deadline,
     @Default(false) bool done,
+    @Default([]) List<Tag> tags,
+
   }) = _Goal;
 
   factory Goal.fromJson(Map<String, dynamic> json) => _$GoalFromJson(json);
