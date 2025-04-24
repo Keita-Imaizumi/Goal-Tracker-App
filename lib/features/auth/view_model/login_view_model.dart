@@ -3,13 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../goals/provider/goals_provider.dart';
-import '../../goals/services/goal_service.dart';
+import '../../goals/model/goal_service.dart';
 import '../model/auth_service.dart';
 import '../provider/auth_provider.dart';
 
-final loginViewModelProvider = StateNotifierProvider<LoginViewModel, AsyncValue<void>>((ref) {
-  return LoginViewModel(ref);
-});
 
 class LoginViewModel extends StateNotifier<AsyncValue<void>> {
   final Ref ref;

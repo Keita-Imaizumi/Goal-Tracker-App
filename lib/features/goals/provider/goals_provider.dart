@@ -1,8 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../auth/provider/auth_provider.dart';
-import '../model/goals.dart';
-import '../services/goal_repository.dart';
+import '../model/goal_repository.dart';
+import '../model/goal_service.dart';
+import '../model/goal.dart';
+
+part 'goals_provider.g.dart';
 
 final goalRepositoryProvider = Provider((ref) => GoalRepository());
 final goalListProvider = StateProvider<List<Goal>>((ref) => []);
@@ -12,3 +16,8 @@ final userGoalsProvider = StreamProvider<List<Goal>>((ref) {
   if (user == null) return const Stream.empty();
   return ref.watch(goalRepositoryProvider).streamGoalsForUser(user.uid);
 });
+@riverpod
+GoalService goalService(GoalServiceRef ref) {
+  return GoalService();
+}
+

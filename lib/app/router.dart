@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goal_tracker/features/goals/screens/dashboard_screen.dart';
 
 import '../features/auth/view/login_screen.dart';
 import '../features/auth/view/signup_screen.dart';
+import '../features/goals/view/dashboard_screen.dart';
 import '../features/splash/view/splash_screen.dart';
 
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-
 
   final _router = GoRouter(
       initialLocation: "/splash",
