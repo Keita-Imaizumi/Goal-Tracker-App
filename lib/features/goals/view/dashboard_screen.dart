@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goal_tracker/features/auth/view_model/login_view_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../auth/model/auth_service.dart';
@@ -14,7 +15,7 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(userGoalsProvider);
-    final user = ref.read(userProvider);
+    final user = ref.watch(userStateProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -26,8 +27,7 @@ class DashboardScreen extends ConsumerWidget {
             onPressed: () async {
               // Googleサインアウト処理
               await AuthService().signOut();
-              ref.read(userProvider.notifier).state = null;
-
+              ref.read(userStateProvider.notifier).setUser(user);
               final viewModel = ref.read(loginViewModelProvider.notifier);
               viewModel.resetLoginState();
 
@@ -78,7 +78,7 @@ class DashboardScreen extends ConsumerWidget {
     final titleController = TextEditingController();
     final detailController = TextEditingController();
     final statusController = TextEditingController();
-    final user = ref.read(userProvider);
+    final user = ref.watch(userStateProvider);
     DateTime? selectedDate;
 
     showDialog(

@@ -1,10 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import '../view_model/login_view_model.dart';
+part 'auth_provider.g.dart';
 
-final userProvider = StateProvider<User?>((ref) => null);
-final loginViewModelProvider = StateNotifierProvider<LoginViewModel, AsyncValue<void>>((ref) {
-  return LoginViewModel(ref);
-});
+@riverpod
+class UserState extends _$UserState {
+  @override
+  User? build() => null;
 
+  void setUser(User? user) => state = user;
+}

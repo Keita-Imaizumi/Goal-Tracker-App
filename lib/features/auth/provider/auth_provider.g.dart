@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'goal_view_model.dart';
+part of 'auth_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goalViewModelHash() => r'2717abb9c92bcf7932644016348f6a1e4e46546d';
+String _$userStateHash() => r'26134931151c4b7c2671276b6f827b11a0f1e228';
 
-/// See also [GoalViewModel].
-@ProviderFor(GoalViewModel)
-final goalViewModelProvider =
-    AutoDisposeNotifierProvider<GoalViewModel, AsyncValue<void>>.internal(
-      GoalViewModel.new,
-      name: r'goalViewModelProvider',
+/// See also [UserState].
+@ProviderFor(UserState)
+final userStateProvider =
+    AutoDisposeNotifierProvider<UserState, User?>.internal(
+      UserState.new,
+      name: r'userStateProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$goalViewModelHash,
+              : _$userStateHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$GoalViewModel = AutoDisposeNotifier<AsyncValue<void>>;
+typedef _$UserState = AutoDisposeNotifier<User?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
