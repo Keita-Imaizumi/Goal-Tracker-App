@@ -74,7 +74,7 @@ class AuthService {
     // 登録処理
     final user = await signUpWithEmail(email, password);
     if (user != null) {
-      ref.read(userProvider.notifier).state = user;
+      ref.read(userStateProvider.notifier).setUser(user);
       context.go('/dashboard/');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
