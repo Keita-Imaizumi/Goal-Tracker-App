@@ -17,8 +17,20 @@ class GoalViewModel extends StateNotifier<AsyncValue<void>> {
       state = AsyncError(e, st);
     }
   }
+  
+  Future<void> deleteGoal(String uid, String goalId) async {
+    state = const AsyncLoading();
+    
+    try{
+      await _service.deleteGoal(uid, goalId);
+    } catch(e, st){
+      state = AsyncError(e, st);
+    }
+  }
+  
   Future<void> toggleDone(String uid, Goal goal) async {
     final updated = goal.copyWith(done: !goal.done);
     await _service.updateGoal(uid, updated);
   }
+  
 }

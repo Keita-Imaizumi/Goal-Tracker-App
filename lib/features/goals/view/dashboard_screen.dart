@@ -13,6 +13,8 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(userGoalsProvider);
+    final viewModel = ref.read(goalViewModelProvider.notifier);
+    final user = ref.read(userProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -48,17 +50,14 @@ class DashboardScreen extends ConsumerWidget {
               leading: Checkbox(
                   value: goal.done,
                   onChanged: (checked){
-                    final user = ref.read(userProvider);
                     if (user == null) return;
-                    ref.read(goalViewModelProvider.notifier).toggleDone(user.uid, goal);
+                    viewModel.toggleDone(user.uid, goal);
                     }),
               title: Text(goal.title),
               subtitle: Text('状態: ${goal.status}'),
               onLongPress: () async {
-                final user = ref.read(userProvider);
                 if (user == null) return;
-
-                await ref.read(goalRepositoryProvider).deleteGoal(user.uid, goal.id);
+                viewModel.deleteGoal(user.uid, goal.id);
               },
             );
           },
@@ -76,6 +75,8 @@ class DashboardScreen extends ConsumerWidget {
     final titleController = TextEditingController();
     final detailController = TextEditingController();
     final statusController = TextEditingController();
+    final user = ref.read(userProvider);
+    final viewModel = ref.read(goalViewModelProvider.notifier);
     DateTime? selectedDate;
 
     showDialog(
@@ -122,9 +123,7 @@ class DashboardScreen extends ConsumerWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                final user = ref.read(userProvider);
                 if (user == null) return;
-
                 final goal = Goal(
                   id: const Uuid().v4(),
                   title: titleController.text,
@@ -132,10 +131,7 @@ class DashboardScreen extends ConsumerWidget {
                   status: statusController.text,
                   deadline: selectedDate,
                 );
-
-                ref
-                    .read(goalViewModelProvider.notifier)
-                    .addGoal(goal, user.uid);
+                viewModel.addGoal(goal, user.uid);
                 Navigator.of(context).pop();
               },
               child: const Text('作成'),
