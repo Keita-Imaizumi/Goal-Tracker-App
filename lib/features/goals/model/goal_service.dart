@@ -38,4 +38,13 @@ class GoalService {
         .map((doc) => goalFromFirestore(doc.id, doc.data()))
         .toList();
   }
+
+  Future<void> updateGoal(String uid, Goal goal) async {
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('goals')
+        .doc(goal.id)
+        .set(goal.toFirestore());
+  }
 }

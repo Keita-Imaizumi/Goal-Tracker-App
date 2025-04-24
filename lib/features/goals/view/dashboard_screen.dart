@@ -48,7 +48,9 @@ class DashboardScreen extends ConsumerWidget {
               leading: Checkbox(
                   value: goal.done,
                   onChanged: (checked){
-                    print('toggled');
+                    final user = ref.read(userProvider);
+                    if (user == null) return;
+                    ref.read(goalViewModelProvider.notifier).toggleDone(user.uid, goal);
                     }),
               title: Text(goal.title),
               subtitle: Text('状態: ${goal.status}'),
