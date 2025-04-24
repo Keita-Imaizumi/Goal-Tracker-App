@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../auth/provider/auth_provider.dart';
 import '../model/goal_service.dart';
-import '../model/goals.dart';
+import '../model/goal.dart';
 import '../model/goal_repository.dart';
 
 part 'goals_provider.g.dart';

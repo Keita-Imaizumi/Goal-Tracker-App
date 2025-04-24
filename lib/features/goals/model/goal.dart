@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'goals.freezed.dart';
+part 'goal.freezed.dart';
 part 'goals.g.dart';
 
 @freezed

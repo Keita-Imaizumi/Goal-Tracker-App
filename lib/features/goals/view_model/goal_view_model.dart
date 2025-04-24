@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../model/goals.dart';
+import '../model/goal.dart';
 import '../provider/goals_provider.dart';
 
 part 'goal_view_model.g.dart';
