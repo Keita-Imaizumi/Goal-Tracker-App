@@ -67,7 +67,23 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               onPressed: () async {
                 final email = emailController.text.trim();
                 final password = passwordController.text;
-                await AuthService().registerWithEmailAndPassword(context, ref, email, password);
+                try {
+                  await AuthService().registerWithEmailAndPassword(context, ref, email, password);
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('エラー'),
+                      content: Text(e.toString()),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('閉じる'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
               },
               child: const Text('新規登録'),
             ),
