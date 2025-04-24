@@ -11,7 +11,6 @@ import '../features/splash/view/splash_screen.dart';
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-
   final _router = GoRouter(
       initialLocation: "/splash",
       routes: [
