@@ -7,13 +7,13 @@ import '../../auth/model/auth_service.dart';
 import '../../auth/provider/auth_provider.dart';
 import '../model/goals.dart';
 import '../provider/goals_provider.dart';
+import '../view_model/goal_view_model.dart';
 
 class DashboardScreen extends ConsumerWidget {
   DashboardScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(userGoalsProvider);
-    final viewModel = ref.read(goalViewModelProvider.notifier);
     final user = ref.read(userProvider);
 
     return Scaffold(
@@ -49,15 +49,15 @@ class DashboardScreen extends ConsumerWidget {
             return ListTile(
               leading: Checkbox(
                   value: goal.done,
-                  onChanged: (checked){
+                  onChanged: (checked) async{
                     if (user == null) return;
-                    viewModel.toggleDone(user.uid, goal);
+                    await ref.read(goalViewModelProvider.notifier).toggleDone(user.uid, goal);
                     }),
               title: Text(goal.title),
               subtitle: Text('状態: ${goal.status}'),
               onLongPress: () async {
                 if (user == null) return;
-                viewModel.deleteGoal(user.uid, goal.id);
+                await ref.read(goalViewModelProvider.notifier).deleteGoal(user.uid, goal.id);
               },
             );
           },
@@ -76,7 +76,6 @@ class DashboardScreen extends ConsumerWidget {
     final detailController = TextEditingController();
     final statusController = TextEditingController();
     final user = ref.read(userProvider);
-    final viewModel = ref.read(goalViewModelProvider.notifier);
     DateTime? selectedDate;
 
     showDialog(
@@ -122,7 +121,7 @@ class DashboardScreen extends ConsumerWidget {
               child: const Text('キャンセル'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (user == null) return;
                 final goal = Goal(
                   id: const Uuid().v4(),
@@ -131,8 +130,14 @@ class DashboardScreen extends ConsumerWidget {
                   status: statusController.text,
                   deadline: selectedDate,
                 );
-                viewModel.addGoal(goal, user.uid);
-                Navigator.of(context).pop();
+                try {
+                  await ref.read(goalViewModelProvider.notifier).addGoal(goal, user.uid);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                } catch (e) {
+                  print("Error adding goal: $e");
+                }
               },
               child: const Text('作成'),
             ),

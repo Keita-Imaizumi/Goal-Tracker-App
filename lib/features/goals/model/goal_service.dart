@@ -6,16 +6,19 @@ class GoalService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> addGoal(String uid, Goal goal) async {
+    final data = {
+      'title': goal.title,
+      'status': goal.status,
+      'deadline': goal.deadline != null
+          ? Timestamp.fromDate(goal.deadline!)
+          : null,
+    };
     await _firestore
         .collection('users')
         .doc(uid)
         .collection('goals')
         .doc(goal.id)
-        .set({
-      'title': goal.title,
-      'status': goal.status,
-      'deadline': goal.deadline,
-    });
+        .set(data);
   }
 
   Future<void> deleteGoal(String uid, String goalId) async {
