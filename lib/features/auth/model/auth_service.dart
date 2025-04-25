@@ -41,20 +41,14 @@ class AuthService {
       );
       return credential.user;
     } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case 'email-already-in-use':
-          print('このメールアドレスは既に使用されています。');
-          break;
-        case 'invalid-email':
-          print('メールアドレスの形式が正しくありません。');
-          break;
-        case 'weak-password':
-          print('パスワードが弱すぎます。');
-          break;
-        default:
-          print('新規登録時に予期しないエラー: ${e.code}');
+      if (e.code == 'email-already-in-use') {
+        // すでにメールアドレスが登録されている場合
+        throw Exception('このメールアドレスはすでに使われています。');
+      } else {
+        // その他のエラー
+        print(e.toString());
+        throw Exception(e);
       }
-      return null;
     } catch (e) {
       print('その他のエラー: $e');
       return null;
@@ -74,7 +68,7 @@ class AuthService {
     // 登録処理
     final user = await signUpWithEmail(email, password);
     if (user != null) {
-      ref.read(userProvider.notifier).state = user;
+      ref.read(userStateProvider.notifier).setUser(user);
       context.go('/dashboard/');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
