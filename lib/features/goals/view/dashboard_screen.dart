@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goal_tracker/features/auth/view_model/login_view_model.dart';
+import 'package:goal_tracker/features/goals/view_model/tag_view_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../auth/model/auth_service.dart';
 import '../../auth/provider/auth_provider.dart';
 import '../model/goal/goal.dart';
+import '../model/tag/tag.dart';
 import '../provider/goals_provider.dart';
 import '../view_model/goal_view_model.dart';
 
@@ -137,6 +139,7 @@ class DashboardScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
