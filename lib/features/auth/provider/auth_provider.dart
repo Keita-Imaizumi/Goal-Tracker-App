@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 part 'auth_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UserState extends _$UserState {
   @override
   User? build() => null;
