@@ -17,10 +17,22 @@ class Goal with _$Goal {
     DateTime? deadline,
     @Default(false) bool done,
     @Default([]) List<Tag> tags,
-
+    @Default([]) List<Task> tasks,
   }) = _Goal;
 
   factory Goal.fromJson(Map<String, dynamic> json) => _$GoalFromJson(json);
+}
+
+@freezed
+class Task with _$Task {
+  const factory Task({
+    required String id,
+    required String title,
+    DateTime? deadline,
+    @Default(false) bool done,
+  }) = _Task;
+
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 }
 
 DateTime? _fromTimestamp(dynamic value) {

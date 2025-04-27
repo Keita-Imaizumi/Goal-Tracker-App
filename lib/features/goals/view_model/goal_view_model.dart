@@ -40,6 +40,10 @@ class GoalViewModel extends _$GoalViewModel {
     }
   }
 
+  Future<void> updateGoal(String uid, Goal goal) async {
+    await ref.read(goalServiceProvider).updateGoal(uid, goal);
+  }
+
   Future<void> toggleDone(String uid, Goal goal) async {
     final updated = goal.copyWith(done: !goal.done);
     await ref.read(goalServiceProvider).updateGoal(uid, updated);
