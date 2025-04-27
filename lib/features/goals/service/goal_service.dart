@@ -14,10 +14,7 @@ class GoalService {
       'detail': goal.detail,
       'deadline': goal.deadline != null ? Timestamp.fromDate(goal.deadline!) : null,
       'done': goal.done,
-      'tags': goal.tags.map((tag) => {
-        'id': tag.id,
-        'name': tag.name,
-      }).toList(),
+      'tags': goal.tags.map((tag) => tag.toJson()).toList(),
       'tasks': goal.tasks.map((task) => {
         'id': task.id,
         'title': task.title,
