@@ -61,10 +61,6 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
                         controller: detailController,
                         decoration: const InputDecoration(labelText: '詳細'),
                       ),
-                      TextField(
-                        controller: statusController,
-                        decoration: const InputDecoration(labelText: '状態'),
-                      ),
                       const SizedBox(height: 16),
                       Text('タグを選択', style: const TextStyle(fontWeight: FontWeight.bold)),
                       ListView(
@@ -117,8 +113,6 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
                         },
                         child: const Text('タグを追加'),
                       ),
-
-                      const Divider(),
 
                       // TextField(
                       //   controller: subTaskController,
