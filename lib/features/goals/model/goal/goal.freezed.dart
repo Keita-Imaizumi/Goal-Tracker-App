@@ -23,7 +23,6 @@ Goal _$GoalFromJson(Map<String, dynamic> json) {
 mixin _$Goal {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
   String? get detail => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
   DateTime? get deadline => throw _privateConstructorUsedError;
@@ -48,7 +47,6 @@ abstract class $GoalCopyWith<$Res> {
   $Res call({
     String id,
     String title,
-    String status,
     String? detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) DateTime? deadline,
     bool done,
@@ -74,7 +72,6 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? status = null,
     Object? detail = freezed,
     Object? deadline = freezed,
     Object? done = null,
@@ -92,11 +89,6 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
                 null == title
                     ? _value.title
                     : title // ignore: cast_nullable_to_non_nullable
-                        as String,
-            status:
-                null == status
-                    ? _value.status
-                    : status // ignore: cast_nullable_to_non_nullable
                         as String,
             detail:
                 freezed == detail
@@ -140,7 +132,6 @@ abstract class _$$GoalImplCopyWith<$Res> implements $GoalCopyWith<$Res> {
   $Res call({
     String id,
     String title,
-    String status,
     String? detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) DateTime? deadline,
     bool done,
@@ -163,7 +154,6 @@ class __$$GoalImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? status = null,
     Object? detail = freezed,
     Object? deadline = freezed,
     Object? done = null,
@@ -181,11 +171,6 @@ class __$$GoalImplCopyWithImpl<$Res>
             null == title
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
-                    as String,
-        status:
-            null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
                     as String,
         detail:
             freezed == detail
@@ -223,7 +208,6 @@ class _$GoalImpl implements _Goal {
   const _$GoalImpl({
     required this.id,
     required this.title,
-    required this.status,
     this.detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) this.deadline,
     this.done = false,
@@ -239,8 +223,6 @@ class _$GoalImpl implements _Goal {
   final String id;
   @override
   final String title;
-  @override
-  final String status;
   @override
   final String? detail;
   @override
@@ -269,7 +251,7 @@ class _$GoalImpl implements _Goal {
 
   @override
   String toString() {
-    return 'Goal(id: $id, title: $title, status: $status, detail: $detail, deadline: $deadline, done: $done, tags: $tags, tasks: $tasks)';
+    return 'Goal(id: $id, title: $title, detail: $detail, deadline: $deadline, done: $done, tags: $tags, tasks: $tasks)';
   }
 
   @override
@@ -279,7 +261,6 @@ class _$GoalImpl implements _Goal {
             other is _$GoalImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.status, status) || other.status == status) &&
             (identical(other.detail, detail) || other.detail == detail) &&
             (identical(other.deadline, deadline) ||
                 other.deadline == deadline) &&
@@ -294,7 +275,6 @@ class _$GoalImpl implements _Goal {
     runtimeType,
     id,
     title,
-    status,
     detail,
     deadline,
     done,
@@ -320,7 +300,6 @@ abstract class _Goal implements Goal {
   const factory _Goal({
     required final String id,
     required final String title,
-    required final String status,
     final String? detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
     final DateTime? deadline,
@@ -335,8 +314,6 @@ abstract class _Goal implements Goal {
   String get id;
   @override
   String get title;
-  @override
-  String get status;
   @override
   String? get detail;
   @override

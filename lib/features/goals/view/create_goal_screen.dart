@@ -14,7 +14,7 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
   final titleController = TextEditingController();
   final detailController = TextEditingController();
   final statusController = TextEditingController();
-  final subTaskController = TextEditingController();
+  // final subTaskController = TextEditingController();
   final user = ref.watch(userStateProvider);
   final List<Task> subTasks = [];
   List<Tag> selectedTags = []; // ← 変更点
@@ -120,32 +120,32 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
 
                       const Divider(),
 
-                      TextField(
-                        controller: subTaskController,
-                        decoration: const InputDecoration(
-                          labelText: '小タスクを追加（Enterで追加）',
-                        ),
-                        onSubmitted: (value) async {
-                          if (value.isNotEmpty) {
-                            DateTime? pickedDeadline = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2100),
-                            );
+                      // TextField(
+                      //   controller: subTaskController,
+                      //   decoration: const InputDecoration(
+                      //     labelText: '小タスクを追加（Enterで追加）',
+                      //   ),
+                      //   onSubmitted: (value) async {
+                      //     if (value.isNotEmpty) {
+                      //       DateTime? pickedDeadline = await showDatePicker(
+                      //         context: context,
+                      //         initialDate: DateTime.now(),
+                      //         firstDate: DateTime(2020),
+                      //         lastDate: DateTime(2100),
+                      //       );
+                      //
+                      //       setState(() {
+                      //         subTasks.add(Task(
+                      //           id: const Uuid().v4(),
+                      //           title: value,
+                      //           deadline: pickedDeadline,
+                      //         ));
+                      //         subTaskController.clear();
+                      //       });
+                      //     }
+                      //   },
 
-                            setState(() {
-                              subTasks.add(Task(
-                                id: const Uuid().v4(),
-                                title: value,
-                                deadline: pickedDeadline,
-                              ));
-                              subTaskController.clear();
-                            });
-                          }
-                        },
-
-                      ),
+                      // ),
                       const SizedBox(height: 8),
                       ListView.builder(
                         shrinkWrap: true,
@@ -215,7 +215,6 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
                                 id: const Uuid().v4(),
                                 title: titleController.text,
                                 detail: detailController.text,
-                                status: statusController.text,
                                 deadline: selectedDate,
                                 tags: selectedTags,
                                 tasks: subTasks,
@@ -246,10 +245,13 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
 void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
   final titleController = TextEditingController(text: goal.title);
   final detailController = TextEditingController(text: goal.detail ?? '');
-  final statusController = TextEditingController(text: goal.status);
   DateTime? selectedDate = goal.deadline;
   List<Task> subTasks = List<Task>.from(goal.tasks);
   List<Tag> selectedTags = List<Tag>.from(goal.tags);
+
+  // タスクタイトルのためのTextEditingControllerを定義
+  // final taskTitleController = TextEditingController();
+  final tags = ref.watch(tagViewModelProvider); // タグのリストを取得するプロバイダ
 
   showModalBottomSheet(
     context: context,
@@ -281,10 +283,6 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
                     controller: detailController,
                     decoration: const InputDecoration(labelText: '詳細'),
                   ),
-                  TextField(
-                    controller: statusController,
-                    decoration: const InputDecoration(labelText: '状態'),
-                  ),
                   const SizedBox(height: 16),
                   Row(
                     children: [
@@ -312,6 +310,112 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
                     ],
                   ),
                   const SizedBox(height: 24),
+
+                  // タグ選択
+                  const SizedBox(height: 16),
+                  Text('タグを選択', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ListView(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: tags.map((tag) {
+                      final isSelected = selectedTags.contains(tag);
+                      return CheckboxListTile(
+                        title: Text(tag.name),
+                        value: isSelected,
+                        onChanged: (bool? checked) {
+                          setState(() {
+                            if (checked == true) {
+                              selectedTags.add(tag);
+                            } else {
+                              selectedTags.remove(tag);
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+
+                  // タグ追加ボタン
+                  TextButton(
+                    onPressed: () {
+                      final controller = TextEditingController();
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text('タグを追加'),
+                          content: TextField(
+                            controller: controller,
+                            decoration: const InputDecoration(labelText: 'タグ名'),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('キャンセル'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // 新しいタグを追加する処理
+                                ref.read(tagViewModelProvider.notifier).addTag(controller.text);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('追加'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: const Text('タグ追加'),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // タスクの入力フォーム
+                  // TextField(
+                  //   controller: taskTitleController,
+                  //   decoration: const InputDecoration(labelText: 'タスクを追加'),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     if (taskTitleController.text.isNotEmpty) {
+                  //       final newTask = Task(
+                  //         id: DateTime.now().toString(), // IDは一意のものに設定
+                  //         title: taskTitleController.text,
+                  //         deadline: null, // タスクに期限が必要ならここで設定
+                  //         done: false, // 新しいタスクは未完了と仮定
+                  //       );
+                  //       setState(() {
+                  //         subTasks.add(newTask); // タスクを追加
+                  //       });
+                  //       taskTitleController.clear(); // 入力フィールドをクリア
+                  //     }
+                  //   },
+                  //   child: const Text('タスク追加'),
+                  // ),
+                  // const SizedBox(height: 16),
+
+                  // タスクリスト表示
+                  // ListView.builder(
+                  //   shrinkWrap: true,
+                  //   itemCount: subTasks.length,
+                  //   itemBuilder: (context, index) {
+                  //     final task = subTasks[index];
+                  //     return ListTile(
+                  //       title: Text(task.title),
+                  //       subtitle: Text(task.deadline != null
+                  //           ? DateFormat('yyyy-MM-dd').format(task.deadline!)
+                  //           : '期限なし'),
+                  //       trailing: IconButton(
+                  //         icon: const Icon(Icons.delete),
+                  //         onPressed: () {
+                  //           setState(() {
+                  //             subTasks.removeAt(index); // タスクを削除
+                  //           });
+                  //         },
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
+
+                  const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -324,7 +428,6 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
                           final updatedGoal = goal.copyWith(
                             title: titleController.text,
                             detail: detailController.text,
-                            status: statusController.text,
                             deadline: selectedDate,
                             tasks: subTasks,
                             tags: selectedTags,

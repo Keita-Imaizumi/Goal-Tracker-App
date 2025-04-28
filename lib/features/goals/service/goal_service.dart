@@ -10,7 +10,6 @@ class GoalService {
     final data = {
       'id': goal.id,
       'title': goal.title,
-      'status': goal.status,
       'detail': goal.detail,
       'deadline': goal.deadline != null ? Timestamp.fromDate(goal.deadline!) : null,
       'done': goal.done,
@@ -66,7 +65,6 @@ class GoalService {
     return Goal(
       id: id,
       title: data['title'] as String? ?? '',
-      status: data['status'] as String? ?? '',
       detail: data['detail'] as String?,
       deadline: (data['deadline'] as Timestamp?)?.toDate(),
       done: data['done'] as bool? ?? false,

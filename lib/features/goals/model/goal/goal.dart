@@ -11,7 +11,6 @@ class Goal with _$Goal {
   const factory Goal({
     required String id,
     required String title,
-    required String status,
     String? detail,
     @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
     DateTime? deadline,
