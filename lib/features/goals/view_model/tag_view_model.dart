@@ -1,21 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:goal_tracker/features/goals/model/tag/tag.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
+import '../provider/tag_provider.dart';
 
 part 'tag_view_model.g.dart';
 
 @riverpod
 class TagViewModel extends _$TagViewModel {
   @override
-  List<Tag> build() => [];
-
-  void addTag(String name) {
-    final newTag = Tag(id: const Uuid().v4(), name: name);
-    state = [...state, newTag];
+  AsyncValue<void> build() {
+    // 初期値を返す（初期ロードなしなら null）
+    return const AsyncData(null);
   }
 
-  void removeTag(String id) {
-    state = state.where((tag) => tag.id != id).toList();
+  Future<void> createTag(String uid, String name) async {
+    // 入力検証（タイトルが空）
+    if (name.isEmpty) {
+      state = AsyncError('タイトルは必須です', StackTrace.current);
+      return;
+    }
+
+    state = const AsyncLoading();
+    try {
+      await ref.read(tagServiceProvider).createTag(uid, name);
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
   }
 }
+

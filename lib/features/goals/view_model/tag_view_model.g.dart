@@ -6,12 +6,12 @@ part of 'tag_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$tagViewModelHash() => r'f4c3cc5c31ad555da01f059ca5a96bd49ed94498';
+String _$tagViewModelHash() => r'682ebda0a62d0e4143e26c494d9a66a86507e743';
 
 /// See also [TagViewModel].
 @ProviderFor(TagViewModel)
 final tagViewModelProvider =
-    AutoDisposeNotifierProvider<TagViewModel, List<Tag>>.internal(
+    AutoDisposeNotifierProvider<TagViewModel, AsyncValue<void>>.internal(
       TagViewModel.new,
       name: r'tagViewModelProvider',
       debugGetCreateSourceHash:
@@ -22,6 +22,6 @@ final tagViewModelProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$TagViewModel = AutoDisposeNotifier<List<Tag>>;
+typedef _$TagViewModel = AutoDisposeNotifier<AsyncValue<void>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
