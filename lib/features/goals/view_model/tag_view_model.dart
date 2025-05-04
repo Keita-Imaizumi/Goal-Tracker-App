@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../model/tag/tag.dart';
 import '../provider/tag_provider.dart';
 
 part 'tag_view_model.g.dart';
@@ -26,6 +27,17 @@ class TagViewModel extends _$TagViewModel {
     } catch (e, st) {
       state = AsyncError(e, st);
       rethrow;
+    }
+  }
+  Future<List<Tag>> fetchTags(String uid) async {
+    state = const AsyncLoading(); // オプション: ロード状態をUIに示したい場合
+    try {
+      final tags = await ref.read(tagServiceProvider).fetchTags(uid);
+      state = const AsyncData(null); // 成功しても特にデータは持たない設計
+      return tags;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      return [];
     }
   }
 }

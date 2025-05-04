@@ -6,6 +6,7 @@ import '../service/goal_repository.dart';
 import '../service/goal_service.dart';
 import '../model/goal/goal.dart';
 
+
 part 'goals_provider.g.dart';
 
 final goalRepositoryProvider = Provider((ref) => GoalRepository());

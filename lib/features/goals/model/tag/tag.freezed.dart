@@ -23,7 +23,6 @@ Tag _$TagFromJson(Map<String, dynamic> json) {
 mixin _$Tag {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  int get color => throw _privateConstructorUsedError;
 
   /// Serializes this Tag to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +38,7 @@ abstract class $TagCopyWith<$Res> {
   factory $TagCopyWith(Tag value, $Res Function(Tag) then) =
       _$TagCopyWithImpl<$Res, Tag>;
   @useResult
-  $Res call({String id, String name, int color});
+  $Res call({String id, String name});
 }
 
 /// @nodoc
@@ -55,7 +54,7 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = null, Object? name = null, Object? color = null}) {
+  $Res call({Object? id = null, Object? name = null}) {
     return _then(
       _value.copyWith(
             id:
@@ -68,11 +67,6 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
                     ? _value.name
                     : name // ignore: cast_nullable_to_non_nullable
                         as String,
-            color:
-                null == color
-                    ? _value.color
-                    : color // ignore: cast_nullable_to_non_nullable
-                        as int,
           )
           as $Val,
     );
@@ -85,7 +79,7 @@ abstract class _$$TagImplCopyWith<$Res> implements $TagCopyWith<$Res> {
       __$$TagImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, int color});
+  $Res call({String id, String name});
 }
 
 /// @nodoc
@@ -98,7 +92,7 @@ class __$$TagImplCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$TagImpl>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = null, Object? name = null, Object? color = null}) {
+  $Res call({Object? id = null, Object? name = null}) {
     return _then(
       _$TagImpl(
         id:
@@ -111,24 +105,16 @@ class __$$TagImplCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$TagImpl>
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
                     as String,
-        color:
-            null == color
-                ? _value.color
-                : color // ignore: cast_nullable_to_non_nullable
-                    as int,
       ),
     );
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$TagImpl implements _Tag {
-  const _$TagImpl({
-    required this.id,
-    required this.name,
-    this.color = 0xFFCCCCCC,
-  });
+  const _$TagImpl({required this.id, required this.name});
 
   factory _$TagImpl.fromJson(Map<String, dynamic> json) =>
       _$$TagImplFromJson(json);
@@ -137,13 +123,10 @@ class _$TagImpl implements _Tag {
   final String id;
   @override
   final String name;
-  @override
-  @JsonKey()
-  final int color;
 
   @override
   String toString() {
-    return 'Tag(id: $id, name: $name, color: $color)';
+    return 'Tag(id: $id, name: $name)';
   }
 
   @override
@@ -152,13 +135,12 @@ class _$TagImpl implements _Tag {
         (other.runtimeType == runtimeType &&
             other is _$TagImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.color, color) || other.color == color));
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, color);
+  int get hashCode => Object.hash(runtimeType, id, name);
 
   /// Create a copy of Tag
   /// with the given fields replaced by the non-null parameter values.
@@ -175,11 +157,8 @@ class _$TagImpl implements _Tag {
 }
 
 abstract class _Tag implements Tag {
-  const factory _Tag({
-    required final String id,
-    required final String name,
-    final int color,
-  }) = _$TagImpl;
+  const factory _Tag({required final String id, required final String name}) =
+      _$TagImpl;
 
   factory _Tag.fromJson(Map<String, dynamic> json) = _$TagImpl.fromJson;
 
@@ -187,8 +166,6 @@ abstract class _Tag implements Tag {
   String get id;
   @override
   String get name;
-  @override
-  int get color;
 
   /// Create a copy of Tag
   /// with the given fields replaced by the non-null parameter values.

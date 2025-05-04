@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -10,14 +9,15 @@ import '../model/tag/tag.dart';
 import '../view_model/goal_view_model.dart';
 import '../view_model/tag_view_model.dart';
 
-void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
+Future<void> showGoalInputBottomSheet(BuildContext context, WidgetRef ref) async {
   final titleController = TextEditingController();
   final detailController = TextEditingController();
-  final statusController = TextEditingController();
   // final subTaskController = TextEditingController();
   final user = ref.watch(userStateProvider);
+  final allTags = await ref.read(tagViewModelProvider.notifier).fetchTags(user!.uid);
   final List<Task> subTasks = [];
-  List<Tag> selectedTags = []; // ← 変更点
+  List<Tag> localAllTags = List.from(allTags);
+  List<Tag> selectedTags = [];
   DateTime? selectedDate;
 
   showModalBottomSheet(
@@ -37,8 +37,6 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
         child: Consumer(
           builder: (context, ref, _) {
             final goalState = ref.watch(goalViewModelProvider);
-            final tags = ref.watch(tagViewModelProvider);
-
             String? errorMessage;
             if (goalState is AsyncError && goalState.error is String) {
               errorMessage = goalState.error as String;
@@ -63,23 +61,42 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
                       ),
                       const SizedBox(height: 16),
                       Text('タグを選択', style: const TextStyle(fontWeight: FontWeight.bold)),
-                      ListView(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: tags.map((tag) {
+                      Wrap(
+                        runSpacing: 16,
+                        spacing: 16,
+                        children: localAllTags.map((tag) {
+                          // selectedTags の中に自分がいるかを確かめる
                           final isSelected = selectedTags.contains(tag);
-                          return CheckboxListTile(
-                            title: Text(tag.name),
-                            value: isSelected,
-                            onChanged: (bool? checked) {
+                          return InkWell(
+                            borderRadius: const BorderRadius.all(Radius.circular(32)),
+                            onTap: () {
                               setState(() {
-                                if (checked == true) {
-                                  selectedTags.add(tag);
-                                } else {
+                                if (isSelected) {
                                   selectedTags.remove(tag);
+                                } else {
+                                  selectedTags.add(tag);
                                 }
                               });
                             },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(Radius.circular(32)),
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.pink,
+                                ),
+                                color: isSelected ? Colors.pink : null,
+                              ),
+                              child: Text(
+                                tag.name,
+                                style: TextStyle(
+                                  color: isSelected ? Colors.white : Colors.pink,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           );
                         }).toList(),
                       ),
@@ -101,9 +118,20 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
                                   child: const Text('キャンセル'),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
-                                    ref.read(tagViewModelProvider.notifier).addTag(controller.text);
-                                    Navigator.pop(context);
+                                  onPressed: () async{
+                                    if (user == null) return;
+                                    await ref
+                                        .read(tagViewModelProvider.notifier)
+                                        .createTag(user.uid, controller.text);
+
+                                    final updatedTags = await ref
+                                        .read(tagViewModelProvider.notifier)
+                                        .fetchTags(user.uid);
+                                    setState(() {
+                                      localAllTags = updatedTags;
+                                    });
+
+                                    if (context.mounted) Navigator.of(context).pop();
                                   },
                                   child: const Text('追加'),
                                 ),
@@ -114,32 +142,6 @@ void showGoalInputBottomSheet(BuildContext context, WidgetRef ref) {
                         child: const Text('タグを追加'),
                       ),
 
-                      // TextField(
-                      //   controller: subTaskController,
-                      //   decoration: const InputDecoration(
-                      //     labelText: '小タスクを追加（Enterで追加）',
-                      //   ),
-                      //   onSubmitted: (value) async {
-                      //     if (value.isNotEmpty) {
-                      //       DateTime? pickedDeadline = await showDatePicker(
-                      //         context: context,
-                      //         initialDate: DateTime.now(),
-                      //         firstDate: DateTime(2020),
-                      //         lastDate: DateTime(2100),
-                      //       );
-                      //
-                      //       setState(() {
-                      //         subTasks.add(Task(
-                      //           id: const Uuid().v4(),
-                      //           title: value,
-                      //           deadline: pickedDeadline,
-                      //         ));
-                      //         subTaskController.clear();
-                      //       });
-                      //     }
-                      //   },
-
-                      // ),
                       const SizedBox(height: 8),
                       ListView.builder(
                         shrinkWrap: true,
@@ -240,12 +242,7 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
   final titleController = TextEditingController(text: goal.title);
   final detailController = TextEditingController(text: goal.detail ?? '');
   DateTime? selectedDate = goal.deadline;
-  List<Task> subTasks = List<Task>.from(goal.tasks);
-  List<Tag> selectedTags = List<Tag>.from(goal.tags);
-
-  // タスクタイトルのためのTextEditingControllerを定義
-  // final taskTitleController = TextEditingController();
-  final tags = ref.watch(tagViewModelProvider); // タグのリストを取得するプロバイダ
+  List<String> selectedTagIds = List<String>.from(goal.tags?.map((tag) => tag.id) ?? []);
 
   showModalBottomSheet(
     context: context,
@@ -254,6 +251,8 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (context) {
+      final allTags = ref.watch(tagViewModelProvider);
+      final user = ref.watch(userStateProvider);
       return StatefulBuilder(
         builder: (context, setState) {
           return Padding(
@@ -305,29 +304,43 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
                   ),
                   const SizedBox(height: 24),
 
-                  // タグ選択
-                  const SizedBox(height: 16),
-                  Text('タグを選択', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ListView(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: tags.map((tag) {
-                      final isSelected = selectedTags.contains(tag);
-                      return CheckboxListTile(
-                        title: Text(tag.name),
-                        value: isSelected,
-                        onChanged: (bool? checked) {
-                          setState(() {
-                            if (checked == true) {
-                              selectedTags.add(tag);
-                            } else {
-                              selectedTags.remove(tag);
-                            }
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
+                  // Wrap(
+                  //   runSpacing: 16,
+                  //   spacing: 16,
+                  //   children: allTags.map((tag) {
+                  //     final isSelected = selectedTagIds.contains(tag.id);
+                  //     return InkWell(
+                  //       onTap: () {
+                  //         setState(() {
+                  //           if (isSelected) {
+                  //             selectedTagIds.remove(tag.id);
+                  //           } else {
+                  //             selectedTagIds.add(tag.id);
+                  //           }
+                  //         });
+                  //       },
+                  //       child: AnimatedContainer(
+                  //         duration: const Duration(milliseconds: 200),
+                  //         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: const BorderRadius.all(Radius.circular(32)),
+                  //           border: Border.all(
+                  //             width: 2,
+                  //             color: Colors.pink,
+                  //           ),
+                  //           color: isSelected ? Colors.pink : null,
+                  //         ),
+                  //         child: Text(
+                  //           tag.name,
+                  //           style: TextStyle(
+                  //             color: isSelected ? Colors.white : Colors.pink,
+                  //             fontWeight: FontWeight.bold,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     );
+                  //   }).toList(),
+                  // ),
 
                   // タグ追加ボタン
                   TextButton(
@@ -347,9 +360,9 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
                               child: const Text('キャンセル'),
                             ),
                             ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async{
                                 // 新しいタグを追加する処理
-                                ref.read(tagViewModelProvider.notifier).addTag(controller.text);
+                                ref.read(tagViewModelProvider.notifier).createTag(user!.uid, controller.text);
                                 Navigator.pop(context);
                               },
                               child: const Text('追加'),
@@ -362,54 +375,6 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
                   ),
                   const SizedBox(height: 16),
 
-                  // タスクの入力フォーム
-                  // TextField(
-                  //   controller: taskTitleController,
-                  //   decoration: const InputDecoration(labelText: 'タスクを追加'),
-                  // ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     if (taskTitleController.text.isNotEmpty) {
-                  //       final newTask = Task(
-                  //         id: DateTime.now().toString(), // IDは一意のものに設定
-                  //         title: taskTitleController.text,
-                  //         deadline: null, // タスクに期限が必要ならここで設定
-                  //         done: false, // 新しいタスクは未完了と仮定
-                  //       );
-                  //       setState(() {
-                  //         subTasks.add(newTask); // タスクを追加
-                  //       });
-                  //       taskTitleController.clear(); // 入力フィールドをクリア
-                  //     }
-                  //   },
-                  //   child: const Text('タスク追加'),
-                  // ),
-                  // const SizedBox(height: 16),
-
-                  // タスクリスト表示
-                  // ListView.builder(
-                  //   shrinkWrap: true,
-                  //   itemCount: subTasks.length,
-                  //   itemBuilder: (context, index) {
-                  //     final task = subTasks[index];
-                  //     return ListTile(
-                  //       title: Text(task.title),
-                  //       subtitle: Text(task.deadline != null
-                  //           ? DateFormat('yyyy-MM-dd').format(task.deadline!)
-                  //           : '期限なし'),
-                  //       trailing: IconButton(
-                  //         icon: const Icon(Icons.delete),
-                  //         onPressed: () {
-                  //           setState(() {
-                  //             subTasks.removeAt(index); // タスクを削除
-                  //           });
-                  //         },
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
-
-                  const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -417,23 +382,25 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
                         onPressed: () => Navigator.pop(context),
                         child: const Text('キャンセル'),
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final updatedGoal = goal.copyWith(
-                            title: titleController.text,
-                            detail: detailController.text,
-                            deadline: selectedDate,
-                            tasks: subTasks,
-                            tags: selectedTags,
-                          );
-                          final user = ref.read(userStateProvider);
-                          if (user != null) {
-                            await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, updatedGoal);
-                          }
-                          if (context.mounted) Navigator.pop(context);
-                        },
-                        child: const Text('保存'),
-                      ),
+                      // ElevatedButton(
+                      //   onPressed: () async {
+                      //     // selectedTagIdsからTagオブジェクトに変換
+                      //     final selectedTags = allTags.where((tag) => selectedTagIds.contains(tag.id)).toList();
+                      //
+                      //     final updatedGoal = goal.copyWith(
+                      //       title: titleController.text,
+                      //       detail: detailController.text,
+                      //       deadline: selectedDate,
+                      //       tags: selectedTags,
+                      //     );
+                      //     final user = ref.read(userStateProvider);
+                      //     if (user != null) {
+                      //       await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, updatedGoal);
+                      //     }
+                      //     if (context.mounted) Navigator.pop(context);
+                      //   },
+                      //   child: const Text('保存'),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 24),
