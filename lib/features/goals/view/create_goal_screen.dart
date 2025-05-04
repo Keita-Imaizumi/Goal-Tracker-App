@@ -119,7 +119,6 @@ Future<void> showGoalInputBottomSheet(BuildContext context, WidgetRef ref) async
                                 ),
                                 ElevatedButton(
                                   onPressed: () async{
-                                    if (user == null) return;
                                     await ref
                                         .read(tagViewModelProvider.notifier)
                                         .createTag(user.uid, controller.text);
@@ -206,7 +205,6 @@ Future<void> showGoalInputBottomSheet(BuildContext context, WidgetRef ref) async
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              if (user == null) return;
                               final goal = Goal(
                                 id: const Uuid().v4(),
                                 title: titleController.text,
@@ -242,7 +240,6 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
   final titleController = TextEditingController(text: goal.title);
   final detailController = TextEditingController(text: goal.detail ?? '');
   DateTime? selectedDate = goal.deadline;
-  List<String> selectedTagIds = List<String>.from(goal.tags?.map((tag) => tag.id) ?? []);
 
   showModalBottomSheet(
     context: context,
@@ -251,7 +248,6 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (context) {
-      final allTags = ref.watch(tagViewModelProvider);
       final user = ref.watch(userStateProvider);
       return StatefulBuilder(
         builder: (context, setState) {
