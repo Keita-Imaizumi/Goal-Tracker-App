@@ -53,13 +53,29 @@ class GoalService {
   }
 
   Future<void> updateGoal(String uid, Goal goal) async {
+    final data = {
+      'id': goal.id,
+      'title': goal.title,
+      'detail': goal.detail,
+      'deadline': goal.deadline != null ? Timestamp.fromDate(goal.deadline!) : null,
+      'done': goal.done,
+      'tags': goal.tags.map((tag) => tag.toJson()).toList(),
+      'tasks': goal.tasks.map((task) => {
+        'id': task.id,
+        'title': task.title,
+        'deadline': task.deadline != null ? Timestamp.fromDate(task.deadline!) : null,
+        'done': task.done,
+      }).toList(),
+    };
+
     await _firestore
         .collection('users')
         .doc(uid)
         .collection('goals')
         .doc(goal.id)
-        .set(goal.toFirestore());
+        .set(data);
   }
+
 
   Goal goalFromFirestore(String id, Map<String, dynamic> data) {
     return Goal(

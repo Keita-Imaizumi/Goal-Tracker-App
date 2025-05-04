@@ -9,7 +9,6 @@ part 'goal_view_model.g.dart';
 class GoalViewModel extends _$GoalViewModel {
   @override
   AsyncValue<void> build() {
-    // 初期値を返す（初期ロードなしなら null）
     return const AsyncData(null);
   }
 

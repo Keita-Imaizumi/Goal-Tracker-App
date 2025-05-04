@@ -236,7 +236,9 @@ Future<void> showGoalInputBottomSheet(BuildContext context, WidgetRef ref) async
   );
 }
 
-void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) {
+void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) async{
+  final user = ref.watch(userStateProvider);
+  final allTags = await ref.read(tagViewModelProvider.notifier).fetchTags(user!.uid);
   final titleController = TextEditingController(text: goal.title);
   final detailController = TextEditingController(text: goal.detail ?? '');
   DateTime? selectedDate = goal.deadline;
