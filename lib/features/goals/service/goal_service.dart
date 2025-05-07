@@ -53,8 +53,13 @@ class GoalService {
   }
 
   Future<void> updateGoal(String uid, Goal goal) async {
+    final docRef = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('goals')
+        .doc(goal.id);
+
     final data = {
-      'id': goal.id,
       'title': goal.title,
       'detail': goal.detail,
       'deadline': goal.deadline != null ? Timestamp.fromDate(goal.deadline!) : null,
@@ -68,13 +73,9 @@ class GoalService {
       }).toList(),
     };
 
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('goals')
-        .doc(goal.id)
-        .set(data);
+    await docRef.update(data); // ← ドキュメントが存在することが前提
   }
+
 
 
   Goal goalFromFirestore(String id, Map<String, dynamic> data) {

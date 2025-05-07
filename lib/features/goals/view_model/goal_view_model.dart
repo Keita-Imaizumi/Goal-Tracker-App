@@ -39,7 +39,7 @@ class GoalViewModel extends _$GoalViewModel {
     }
   }
 
-  Future<void> updateGoal(String uid, Goal goal) async {
+  Future<void> updateGoal(Goal goal, String uid) async {
     await ref.read(goalServiceProvider).updateGoal(uid, goal);
   }
 

@@ -241,6 +241,8 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) asy
   final allTags = await ref.read(tagViewModelProvider.notifier).fetchTags(user!.uid);
   final titleController = TextEditingController(text: goal.title);
   final detailController = TextEditingController(text: goal.detail ?? '');
+  List<Tag> localAllTags = List.from(allTags);
+  List<Tag> selectedTags = List.from(goal.tags);
   DateTime? selectedDate = goal.deadline;
 
   showModalBottomSheet(
@@ -302,43 +304,44 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) asy
                   ),
                   const SizedBox(height: 24),
 
-                  // Wrap(
-                  //   runSpacing: 16,
-                  //   spacing: 16,
-                  //   children: allTags.map((tag) {
-                  //     final isSelected = selectedTagIds.contains(tag.id);
-                  //     return InkWell(
-                  //       onTap: () {
-                  //         setState(() {
-                  //           if (isSelected) {
-                  //             selectedTagIds.remove(tag.id);
-                  //           } else {
-                  //             selectedTagIds.add(tag.id);
-                  //           }
-                  //         });
-                  //       },
-                  //       child: AnimatedContainer(
-                  //         duration: const Duration(milliseconds: 200),
-                  //         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: const BorderRadius.all(Radius.circular(32)),
-                  //           border: Border.all(
-                  //             width: 2,
-                  //             color: Colors.pink,
-                  //           ),
-                  //           color: isSelected ? Colors.pink : null,
-                  //         ),
-                  //         child: Text(
-                  //           tag.name,
-                  //           style: TextStyle(
-                  //             color: isSelected ? Colors.white : Colors.pink,
-                  //             fontWeight: FontWeight.bold,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     );
-                  //   }).toList(),
-                  // ),
+                  Wrap(
+                    runSpacing: 16,
+                    spacing: 16,
+                    children: localAllTags.map((tag) {
+                      final isSelected = selectedTags.contains(tag);
+                      return InkWell(
+                        borderRadius: const BorderRadius.all(Radius.circular(32)),
+                        onTap: () {
+                          setState(() {
+                            if (isSelected) {
+                              selectedTags.remove(tag);
+                            } else {
+                              selectedTags.add(tag);
+                            }
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(32)),
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.pink,
+                            ),
+                            color: isSelected ? Colors.pink : null,
+                          ),
+                          child: Text(
+                            tag.name,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.pink,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
 
                   // タグ追加ボタン
                   TextButton(
@@ -380,25 +383,23 @@ void showEditGoalBottomSheet(BuildContext context, WidgetRef ref, Goal goal) asy
                         onPressed: () => Navigator.pop(context),
                         child: const Text('キャンセル'),
                       ),
-                      // ElevatedButton(
-                      //   onPressed: () async {
-                      //     // selectedTagIdsからTagオブジェクトに変換
-                      //     final selectedTags = allTags.where((tag) => selectedTagIds.contains(tag.id)).toList();
-                      //
-                      //     final updatedGoal = goal.copyWith(
-                      //       title: titleController.text,
-                      //       detail: detailController.text,
-                      //       deadline: selectedDate,
-                      //       tags: selectedTags,
-                      //     );
-                      //     final user = ref.read(userStateProvider);
-                      //     if (user != null) {
-                      //       await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, updatedGoal);
-                      //     }
-                      //     if (context.mounted) Navigator.pop(context);
-                      //   },
-                      //   child: const Text('保存'),
-                      // ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final updatedGoal = Goal(
+                            id: goal.id,
+                            title: titleController.text,
+                            detail: detailController.text,
+                            deadline: selectedDate,
+                            tags: selectedTags,
+                          );
+                          await ref.read(goalViewModelProvider.notifier).updateGoal(updatedGoal, user!.uid);
+                          final updatedState = ref.read(goalViewModelProvider);
+                          if (updatedState is! AsyncError && context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: const Text('保存'),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 24),
