@@ -4,7 +4,6 @@ import 'package:goal_tracker/features/goals/repository/goal_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../goals/provider/goals_provider.dart';
-import '../../goals/repository/goal_service.dart';
 import '../model/auth_service.dart';
 import '../provider/auth_provider.dart';
 
