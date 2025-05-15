@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
+import 'package:logger/logger.dart';
 
 import '../model/tag/tag.dart';
 
 class TagService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // Fetch the tags for the current user from Firebase
+  final logger = Logger();
   Future<List<Tag>> fetchTags(String uid) async {
     try {
       final tagQuerySnapshot = await _firestore
@@ -18,7 +20,7 @@ class TagService {
           .map((doc) => Tag(id: doc.id, name: doc['name'] as String))
           .toList();
     } catch (e) {
-      print('Error fetching tags: $e');
+      logger.d('Error fetching tags: $e');
       return [];
     }
   }
@@ -35,7 +37,7 @@ class TagService {
           .set({'name': newTag.name,});
 
     } catch (e) {
-      print('Error adding tag: $e');
+      logger.d('Error adding tag: $e');
     }
   }
 
@@ -49,7 +51,7 @@ class TagService {
           .delete();
 
     } catch (e) {
-      print('Error removing tag: $e');
+      logger.d('Error removing tag: $e');
     }
   }
 }
