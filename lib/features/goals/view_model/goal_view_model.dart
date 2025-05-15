@@ -1,6 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../model/goal.dart';
+import '../model/goal/goal.dart';
 import '../provider/goals_provider.dart';
 
 part 'goal_view_model.g.dart';
@@ -9,7 +8,6 @@ part 'goal_view_model.g.dart';
 class GoalViewModel extends _$GoalViewModel {
   @override
   AsyncValue<void> build() {
-    // 初期値を返す（初期ロードなしなら null）
     return const AsyncData(null);
   }
 
@@ -38,6 +36,10 @@ class GoalViewModel extends _$GoalViewModel {
     } catch (e, st) {
       state = AsyncError(e, st);
     }
+  }
+
+  Future<void> updateGoal(Goal goal, String uid) async {
+    await ref.read(goalServiceProvider).updateGoal(uid, goal);
   }
 
   Future<void> toggleDone(String uid, Goal goal) async {

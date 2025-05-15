@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../goals/provider/goals_provider.dart';
-import '../../goals/model/goal_service.dart';
+import '../../goals/service/goal_service.dart';
 import '../model/auth_service.dart';
 import '../provider/auth_provider.dart';
 
