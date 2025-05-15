@@ -2,9 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../auth/provider/auth_provider.dart';
-import '../service/goal_repository.dart';
-import '../service/goal_service.dart';
+
 import '../model/goal/goal.dart';
+import '../repository/goal_repository.dart';
+import '../repository/goal_service.dart';
 
 
 part 'goals_provider.g.dart';
