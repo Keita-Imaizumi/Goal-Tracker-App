@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logger/logger.dart';
 
 import '../provider/auth_provider.dart';
 
@@ -18,6 +18,7 @@ class AuthService {
     // https://www.googleapis.com/auth/calendar.readonly,
     // https://www.googleapis.com/auth/calendar.events,
   ]);
+  final logger = Logger();
 
   Future<User?> signInWithGoogle() async {
     final googleUser = await _googleSignIn.signIn();
@@ -43,20 +44,20 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':
-          print('このメールアドレスは既に使用されています。');
+          logger.d('このメールアドレスは既に使用されています。');
           break;
         case 'invalid-email':
-          print('メールアドレスの形式が正しくありません。');
+          logger.d('メールアドレスの形式が正しくありません。');
           break;
         case 'weak-password':
-          print('パスワードが弱すぎます。');
+          logger.d('パスワードが弱すぎます。');
           break;
         default:
-          print('新規登録時に予期しないエラー: ${e.code}');
+          logger.d('新規登録時に予期しないエラー: ${e.code}');
       }
       return null;
     } catch (e) {
-      print('その他のエラー: $e');
+      logger.d('その他のエラー: $e');
       return null;
     }
   }
@@ -89,7 +90,7 @@ class AuthService {
       await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       return methods.isNotEmpty;
     } catch (e) {
-      print('メール確認エラー: $e');
+      logger.d('メール確認エラー: $e');
       return false;
     }
   }
@@ -100,7 +101,7 @@ class AuthService {
           .signInWithEmailAndPassword(email: email, password: password);
       return credential.user;
     } catch (e) {
-      print('ログインエラー: $e');
+      logger.d('ログインエラー: $e');
       return null;
     }
   }
