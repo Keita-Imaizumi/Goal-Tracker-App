@@ -59,7 +59,7 @@ class DashboardScreen extends ConsumerWidget {
                 await ref.read(goalViewModelProvider.notifier).deleteGoal(user.uid, goal.id);
               },
               onTap: () {
-                showEditGoalBottomSheet(context, ref, goal);
+                showGoalBottomSheet(context: context, ref: ref, goal: goal);
               },
             );
           },
@@ -68,7 +68,7 @@ class DashboardScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           ref.read(goalViewModelProvider.notifier).reset(); // ← 状態初期化
-          showGoalInputBottomSheet(context, ref);
+          showGoalBottomSheet(context: context, ref: ref);
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
