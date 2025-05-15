@@ -20,7 +20,7 @@ class GoalViewModel extends _$GoalViewModel {
 
     state = const AsyncLoading();
     try {
-      await ref.read(goalServiceProvider).addGoal(uid, goal);
+      await ref.read(goalRepositoryProvider).addGoal(uid, goal);
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -31,7 +31,7 @@ class GoalViewModel extends _$GoalViewModel {
   Future<void> deleteGoal(String uid, String goalId) async {
     state = const AsyncLoading();
     try {
-      await ref.read(goalServiceProvider).deleteGoal(uid, goalId);
+      await ref.read(goalRepositoryProvider).deleteGoal(uid, goalId);
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -39,12 +39,12 @@ class GoalViewModel extends _$GoalViewModel {
   }
 
   Future<void> updateGoal(Goal goal, String uid) async {
-    await ref.read(goalServiceProvider).updateGoal(uid, goal);
+    await ref.read(goalRepositoryProvider).updateGoal(uid, goal);
   }
 
   Future<void> toggleDone(String uid, Goal goal) async {
     final updated = goal.copyWith(done: !goal.done);
-    await ref.read(goalServiceProvider).updateGoal(uid, updated);
+    await ref.read(goalRepositoryProvider).updateGoal(uid, updated);
   }
 
   void reset() {

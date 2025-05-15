@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goal_tracker/features/goals/repository/goal_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../goals/provider/goals_provider.dart';
@@ -42,7 +43,7 @@ class LoginViewModel extends _$LoginViewModel {
       if (user != null) {
         ref.read(userStateProvider.notifier).state = user;
 
-        final goals = await GoalService().fetchGoals(user.uid);
+        final goals = await GoalRepository().fetchGoals(user.uid);
         ref.read(goalListProvider.notifier).state = goals;
 
         context.go('/dashboard/');
