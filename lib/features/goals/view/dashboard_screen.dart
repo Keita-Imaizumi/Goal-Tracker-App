@@ -7,7 +7,7 @@ import '../../auth/model/auth_service.dart';
 import '../../auth/provider/auth_provider.dart';
 import '../provider/goals_provider.dart';
 import '../view_model/goal_view_model.dart';
-import 'create_goal_screen.dart';
+import 'widget/goal_sheet_screen.dart';
 
 class DashboardScreen extends ConsumerWidget {
   DashboardScreen({super.key});
