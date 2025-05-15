@@ -6,7 +6,7 @@ import '../../auth/provider/auth_provider.dart';
 import '../model/goal/goal.dart';
 import '../repository/goal_repository.dart';
 
-final goalRepositoryProvider = Provider((ref) => GoalRepository());
+
 final goalListProvider = StateProvider<List<Goal>>((ref) => []);
 
 final userGoalsProvider = StreamProvider<List<Goal>>((ref) {

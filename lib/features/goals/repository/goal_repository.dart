@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/goal/goal.dart';
 import '../model/tag/tag.dart';
+
+final goalRepositoryProvider = Provider((ref) => GoalRepository());
 
 class GoalRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
