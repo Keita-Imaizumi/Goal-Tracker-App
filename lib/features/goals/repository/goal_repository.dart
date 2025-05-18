@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../utils/goal_mapper.dart';
 import '../model/goal/goal.dart';
 
-final goalRepositoryProvider = Provider((ref) => GoalRepository(FirebaseFirestore.instance));
+part 'goal_repository.g.dart';
+@riverpod
+GoalRepository goalRepository(Ref ref) {
+  return GoalRepository(FirebaseFirestore.instance);
+}
 
 class GoalRepository {
   final FirebaseFirestore _firestore;
