@@ -4,10 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/goal/goal.dart';
 import '../model/tag/tag.dart';
 
-final goalRepositoryProvider = Provider((ref) => GoalRepository());
+final goalRepositoryProvider = Provider((ref) => GoalRepository(FirebaseFirestore.instance));
 
 class GoalRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+  GoalRepository(this._firestore);
 
   /// 🔁 リアルタイムでゴール一覧を取得
   Stream<List<Goal>> streamGoalsForUser(String uid) {

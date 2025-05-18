@@ -9,7 +9,6 @@ import '../provider/auth_provider.dart';
 
 part 'login_view_model.g.dart';
 
-@riverpod
 class LoginViewModel extends _$LoginViewModel {
   @override
   AsyncValue<void> build() {
@@ -42,7 +41,8 @@ class LoginViewModel extends _$LoginViewModel {
       if (user != null) {
         ref.read(userStateProvider.notifier).state = user;
 
-        final goals = await GoalRepository().fetchGoals(user.uid);
+        final goalRepository = ref.read(goalRepositoryProvider);
+        final goals = await goalRepository.fetchGoals(user.uid);
         ref.read(goalListProvider.notifier).state = goals;
 
         context.go('/dashboard/');
