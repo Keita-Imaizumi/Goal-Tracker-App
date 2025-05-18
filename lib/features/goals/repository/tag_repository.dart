@@ -1,8 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:logger/logger.dart';
 
 import '../model/tag/tag.dart';
+
+part 'tag_repository.g.dart';
+
+@riverpod
+TagRepository tagRepository(Ref ref) {
+  return TagRepository();
+}
 
 class TagRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

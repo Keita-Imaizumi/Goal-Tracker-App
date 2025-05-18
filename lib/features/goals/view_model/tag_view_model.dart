@@ -1,6 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../model/tag/tag.dart';
-import '../provider/tag_provider.dart';
+import '../repository/tag_repository.dart';
 
 part 'tag_view_model.g.dart';
 
@@ -21,7 +22,7 @@ class TagViewModel extends _$TagViewModel {
 
     state = const AsyncLoading();
     try {
-      await ref.read(tagServiceProvider).createTag(uid, name);
+      await ref.read(tagRepositoryProvider).createTag(uid, name);
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -31,7 +32,7 @@ class TagViewModel extends _$TagViewModel {
 
   Future<void> removeTag(String userId, String tagId) async {
     try{
-      await ref.read(tagServiceProvider).removeTag(userId, tagId);
+      await ref.read(tagRepositoryProvider).removeTag(userId, tagId);
     } catch (e, st) {
       state = AsyncError(e, st);
       rethrow;
@@ -41,7 +42,7 @@ class TagViewModel extends _$TagViewModel {
   Future<List<Tag>> fetchTags(String uid) async {
     state = const AsyncLoading();
     try {
-      final tags = await ref.read(tagServiceProvider).fetchTags(uid);
+      final tags = await ref.read(tagRepositoryProvider).fetchTags(uid);
       state = const AsyncData(null);
       return tags;
     } catch (e, st) {
