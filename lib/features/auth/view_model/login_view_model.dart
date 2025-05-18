@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:goal_tracker/features/goals/repository/goal_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../goals/provider/goals_provider.dart';
+import '../../goals/view_model/goal_view_model.dart';
 import '../model/auth_service.dart';
 import '../provider/auth_provider.dart';
 
