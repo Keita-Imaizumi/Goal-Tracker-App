@@ -28,11 +28,21 @@ class TagViewModel extends _$TagViewModel {
       rethrow;
     }
   }
+
+  Future<void> removeTag(String userId, String tagId) async {
+    try{
+      await ref.read(tagServiceProvider).removeTag(userId, tagId);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+
   Future<List<Tag>> fetchTags(String uid) async {
-    state = const AsyncLoading(); // オプション: ロード状態をUIに示したい場合
+    state = const AsyncLoading();
     try {
       final tags = await ref.read(tagServiceProvider).fetchTags(uid);
-      state = const AsyncData(null); // 成功しても特にデータは持たない設計
+      state = const AsyncData(null);
       return tags;
     } catch (e, st) {
       state = AsyncError(e, st);

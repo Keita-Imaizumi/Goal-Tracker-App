@@ -11,7 +11,7 @@ class GoalViewModel extends _$GoalViewModel {
     return const AsyncData(null);
   }
 
-  Future<void> addGoal(Goal goal, String uid) async {
+  Future<void> addGoal(Goal goal, String userId) async {
     // 入力検証（タイトルが空）
     if (goal.title.trim().isEmpty) {
       state = AsyncError('タイトルは必須です', StackTrace.current);
@@ -20,7 +20,7 @@ class GoalViewModel extends _$GoalViewModel {
 
     state = const AsyncLoading();
     try {
-      await ref.read(goalRepositoryProvider).addGoal(uid, goal);
+      await ref.read(goalRepositoryProvider).addGoal(userId, goal);
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -28,23 +28,23 @@ class GoalViewModel extends _$GoalViewModel {
     }
   }
 
-  Future<void> deleteGoal(String uid, String goalId) async {
+  Future<void> deleteGoal(String userId, String goalId) async {
     state = const AsyncLoading();
     try {
-      await ref.read(goalRepositoryProvider).deleteGoal(uid, goalId);
+      await ref.read(goalRepositoryProvider).deleteGoal(userId, goalId);
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);
     }
   }
 
-  Future<void> updateGoal(Goal goal, String uid) async {
-    await ref.read(goalRepositoryProvider).updateGoal(uid, goal);
+  Future<void> updateGoal(String userId, Goal goal) async {
+    await ref.read(goalRepositoryProvider).updateGoal(userId, goal);
   }
 
-  Future<void> toggleDone(String uid, Goal goal) async {
+  Future<void> toggleDone(String userId, Goal goal) async {
     final updated = goal.copyWith(done: !goal.done);
-    await ref.read(goalRepositoryProvider).updateGoal(uid, updated);
+    await ref.read(goalRepositoryProvider).updateGoal(userId, updated);
   }
 
   void reset() {

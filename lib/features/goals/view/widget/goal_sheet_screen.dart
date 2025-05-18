@@ -210,7 +210,7 @@ Future<void> showGoalBottomSheet({
                           if (goal == null) {
                             await ref.read(goalViewModelProvider.notifier).addGoal(newGoal, user.uid);
                           } else {
-                            await ref.read(goalViewModelProvider.notifier).updateGoal(newGoal, user.uid);
+                            await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, newGoal);
                           }
 
                           final updatedState = ref.read(goalViewModelProvider);
