@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goal_tracker/features/auth/view_model/login_view_model.dart';
 
-import '../../auth/model/auth_service.dart';
 import '../../auth/provider/auth_provider.dart';
+import '../../auth/service/auth_service.dart';
 import '../view_model/goal_view_model.dart';
 import 'widget/goal_sheet_screen.dart';
 

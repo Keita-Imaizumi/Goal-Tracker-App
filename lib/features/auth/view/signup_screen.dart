@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/auth_service.dart';
+import '../service/auth_service.dart';
+
+
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
