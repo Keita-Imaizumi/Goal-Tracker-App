@@ -45,16 +45,5 @@ dynamic _toTimestamp(DateTime? dateTime) {
   return dateTime;
 }
 
-Goal goalFromFirestore(String id, Map<String, dynamic> data) {
-  return Goal.fromJson({...data, 'id': id});
-}
-
-extension GoalFirestore on Goal {
-  Map<String, dynamic> toFirestore() {
-    final json = toJson();
-    json.remove('id');
-    return json;
-  }
-}
 
 

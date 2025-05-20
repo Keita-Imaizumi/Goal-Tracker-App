@@ -1,18 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:logger/logger.dart';
 
 import '../model/tag/tag.dart';
 
-class TagService {
+part 'tag_repository.g.dart';
+
+@riverpod
+TagRepository tagRepository(Ref ref) {
+  return TagRepository();
+}
+
+class TagRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // Fetch the tags for the current user from Firebase
   final logger = Logger();
-  Future<List<Tag>> fetchTags(String uid) async {
+
+  Future<List<Tag>> fetchTags(String userId) async {
     try {
       final tagQuerySnapshot = await _firestore
           .collection('users')
-          .doc(uid)
+          .doc(userId)
           .collection('tags')
           .get();
 
@@ -26,12 +35,12 @@ class TagService {
   }
 
 
-  Future<void> createTag(String uid, String name) async {
+  Future<void> createTag(String userId, String name) async {
     try {
       final newTag = Tag(id: const Uuid().v4(), name: name);
       await _firestore
           .collection('users')
-          .doc(uid)
+          .doc(userId)
           .collection('tags')
           .doc(newTag.id)
           .set({'name': newTag.name,});
@@ -41,13 +50,13 @@ class TagService {
     }
   }
 
-  Future<void> removeTag(String userId, String id) async {
+  Future<void> removeTag(String userId, String tagId) async {
     try {
       await _firestore
           .collection('users')
           .doc(userId)
           .collection('tags')
-          .doc(id)
+          .doc(tagId)
           .delete();
 
     } catch (e) {

@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goal_tracker/features/goals/repository/goal_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../goals/provider/goals_provider.dart';
-import '../../goals/repository/goal_service.dart';
+import '../../goals/view_model/goal_view_model.dart';
 import '../model/auth_service.dart';
 import '../provider/auth_provider.dart';
 
 part 'login_view_model.g.dart';
 
-@riverpod
 class LoginViewModel extends _$LoginViewModel {
   @override
   AsyncValue<void> build() {
@@ -42,7 +41,8 @@ class LoginViewModel extends _$LoginViewModel {
       if (user != null) {
         ref.read(userStateProvider.notifier).state = user;
 
-        final goals = await GoalService().fetchGoals(user.uid);
+        final goalRepository = ref.read(goalRepositoryProvider);
+        final goals = await goalRepository.fetchGoals(user.uid);
         ref.read(goalListProvider.notifier).state = goals;
 
         context.go('/dashboard/');
