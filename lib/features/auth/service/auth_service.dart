@@ -7,6 +7,8 @@ import 'package:logger/logger.dart';
 
 import '../provider/auth_provider.dart';
 
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
+
 class AuthService {
   // FirebaseAuthインスタンスを取得
   final FirebaseAuth _auth = FirebaseAuth.instance;

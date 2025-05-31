@@ -9,7 +9,7 @@ import '../view_model/goal_view_model.dart';
 import 'widget/goal_sheet_screen.dart';
 
 class DashboardScreen extends ConsumerWidget {
-  DashboardScreen({super.key});
+  const DashboardScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(userGoalsProvider);
@@ -24,7 +24,7 @@ class DashboardScreen extends ConsumerWidget {
             tooltip: 'ログアウト',
             onPressed: () async {
               // Googleサインアウト処理
-              await AuthService().signOut();
+              await ref.read(authServiceProvider).signOut();
               ref.read(userStateProvider.notifier).state = null;
               final viewModel = ref.read(loginViewModelProvider.notifier);
               viewModel.resetLoginState();
