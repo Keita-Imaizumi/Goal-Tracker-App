@@ -25,7 +25,8 @@ class DashboardScreen extends ConsumerWidget {
             onPressed: () async {
               // Googleサインアウト処理
               await AuthService().signOut();
-              ref.read(userStateProvider.notifier).setUser(user);
+              // Clear the logged-in user after signing out
+              ref.read(userStateProvider.notifier).setUser(null);
               final viewModel = ref.read(loginViewModelProvider.notifier);
               viewModel.resetLoginState();
 
