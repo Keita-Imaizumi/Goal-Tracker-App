@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../view_model/login_view_model.dart';
+import '../provider/login_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -15,7 +16,6 @@ class LoginScreen extends ConsumerWidget {
 
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-    final isPasswordVisible = StateProvider((ref) => false);
 
     return Scaffold(
       appBar: AppBar(title: const Text('ログイン')),
@@ -38,7 +38,7 @@ class LoginScreen extends ConsumerWidget {
             // パスワード
             Consumer(
               builder: (context, ref, _) {
-                final visible = ref.watch(isPasswordVisible);
+                final visible = ref.watch(isPasswordVisibleProvider);
                 return TextField(
                   controller: passwordController,
                   obscureText: !visible,
@@ -50,7 +50,7 @@ class LoginScreen extends ConsumerWidget {
                         visible ? Icons.visibility : Icons.visibility_off,
                       ),
                       onPressed: () {
-                        ref.read(isPasswordVisible.notifier).state = !visible;
+                        ref.read(isPasswordVisibleProvider.notifier).toggle();
                       },
                     ),
                   ),
