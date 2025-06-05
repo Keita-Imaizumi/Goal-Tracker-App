@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goal_tracker/features/auth/view_model/login_view_model.dart';
 
-import '../../auth/model/auth_service.dart';
 import '../../auth/provider/auth_provider.dart';
+import '../../auth/service/auth_service.dart';
 import '../view_model/goal_view_model.dart';
 import 'widget/goal_sheet_screen.dart';
 
 class DashboardScreen extends ConsumerWidget {
-  DashboardScreen({super.key});
+  const DashboardScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(userGoalsProvider);
@@ -24,12 +24,10 @@ class DashboardScreen extends ConsumerWidget {
             tooltip: 'ログアウト',
             onPressed: () async {
               // Googleサインアウト処理
-              await AuthService().signOut();
-              // Clear the logged-in user after signing out
+              await ref.read(authServiceProvider).signOut();
               ref.read(userStateProvider.notifier).setUser(null);
               final viewModel = ref.read(loginViewModelProvider.notifier);
               viewModel.resetLoginState();
-
               // 任意: ログイン画面へ戻る
               if (context.mounted) {
                 context.go('/login');
