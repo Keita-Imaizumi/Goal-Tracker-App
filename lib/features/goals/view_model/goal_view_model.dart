@@ -61,11 +61,16 @@ class GoalViewModel extends _$GoalViewModel {
   }
 }
 
-final userGoalsProvider = StreamProvider<List<Goal>>((ref) {
+@riverpod
+Stream<List<Goal>> userGoals(UserGoalsRef ref) {
   final user = ref.watch(userStateProvider);
   if (user == null) return const Stream.empty();
   return ref.watch(goalRepositoryProvider).streamGoalsForUser(user.uid);
-});
+}
 
-final goalListProvider = StateProvider<List<Goal>>((ref) => []);
+@riverpod
+class GoalList extends _$GoalList {
+  @override
+  List<Goal> build() => [];
+}
 
