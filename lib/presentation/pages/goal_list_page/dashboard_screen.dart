@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goal_tracker/features/auth/view_model/login_view_model.dart';
+import 'package:goal_tracker/presentation/pages/login_page/login_view_model.dart';
 
-import '../../auth/provider/auth_provider.dart';
-import '../../auth/service/auth_service.dart';
-import '../view_model/goal_view_model.dart';
-import 'widget/goal_sheet_screen.dart';
+import '../../../features/auth/provider/auth_provider.dart';
+import '../../../features/auth/service/auth_service.dart';
+import 'goal_view_model.dart';
+import 'goal_sheet_screen.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});

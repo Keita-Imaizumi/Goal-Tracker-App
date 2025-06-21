@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../view_model/login_view_model.dart';
-import '../provider/login_provider.dart';
+import 'login_view_model.dart';
+import '../../../features/auth/provider/login_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});

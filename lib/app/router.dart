@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/auth/view/login_screen.dart';
-import '../features/auth/view/signup_screen.dart';
-import '../features/goals/view/dashboard_screen.dart';
-import '../features/splash/view/splash_screen.dart';
+import '../presentation/pages/login_page/login_screen.dart';
+import '../presentation/pages/signup_page/signup_screen.dart';
+import '../presentation/pages/goal_list_page/dashboard_screen.dart';
+import '../presentation/pages/splash_page/splash_screen.dart';
 
 
 class MyApp extends StatelessWidget {

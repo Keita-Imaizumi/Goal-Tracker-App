@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goal_tracker/features/goals/repository/goal_repository.dart';
+import 'package:goal_tracker/infrastructures/repositories/goal_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../goals/view_model/goal_view_model.dart';
+import '../goal_list_page/goal_view_model.dart';
 
-import '../provider/auth_provider.dart';
-import '../service/auth_service.dart';
+import '../../../features/auth/provider/auth_provider.dart';
+import '../../../features/auth/service/auth_service.dart';
 
 part 'login_view_model.g.dart';
 

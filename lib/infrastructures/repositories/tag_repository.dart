@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:logger/logger.dart';
 
-import '../model/tag/tag.dart';
+import '../../domains/entities/tag/tag.dart';
 
 part 'tag_repository.g.dart';
 

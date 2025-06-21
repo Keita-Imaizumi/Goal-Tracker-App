@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../model/tag/tag.dart';
-import '../repository/tag_repository.dart';
+import '../../../domains/entities/tag/tag.dart';
+import '../../../infrastructures/repositories/tag_repository.dart';
 
 part 'tag_view_model.g.dart';
 

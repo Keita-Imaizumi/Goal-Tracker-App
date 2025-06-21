@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../auth/provider/auth_provider.dart';
-import '../../model/goal/goal.dart';
-import '../../model/tag/tag.dart';
-import '../../view_model/goal_view_model.dart';
-import '../../view_model/tag_view_model.dart';
+import '../../../features/auth/provider/auth_provider.dart';
+import '../../../domains/entities/goal/goal.dart';
+import '../../../domains/entities/tag/tag.dart';
+import 'goal_view_model.dart';
+import 'tag_view_model.dart';
 
 Future<void> showGoalBottomSheet({
   required BuildContext context,

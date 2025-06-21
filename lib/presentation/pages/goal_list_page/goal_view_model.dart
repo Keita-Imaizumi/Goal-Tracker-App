@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../auth/provider/auth_provider.dart';
+import '../../../features/auth/provider/auth_provider.dart';
 
-import '../model/goal/goal.dart';
-import '../repository/goal_repository.dart';
+import '../../../domains/entities/goal/goal.dart';
+import '../../../infrastructures/repositories/goal_repository.dart';
 
 part 'goal_view_model.g.dart';
 
