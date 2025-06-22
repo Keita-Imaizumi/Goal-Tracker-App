@@ -22,11 +22,27 @@
 - **ファイル名**: snake_case（例: goal_repository.dart, goal_view_model.dart）
 - **ディレクトリ名**: snake_case（例: model, repository, view_model）
 - **Provider名**: xxxProvider（例: goalRepositoryProvider）
-- **CRUDメソッド**: add, fetch, update, delete で統一（例: addGoal, fetchGoals）
+- **CRUDメソッド**: create, fetch, update, delete で統一（例: addGoal, fetchGoals）
 - **変数名**: camelCase（例: goalId, userId, goalList）
 - **リスト・複数形**: 必ず s を付ける（例: goals, tags, tasks）
 
 ##　その他
 - アーキテクチャはMVVMを採用
 - クリーンアーキテクチャに準拠する。
+- ディレクトリ構成は以下のようにする。
+  - lib/
+    - domains/          # domain層
+        - entities/         # エンティティ
+        - features/         # エンティティに関連する機能
+    - applications/   # アプリケーションロジック
+      - usecases/      # ユースケース
+    　- state/         # provider
+    - infrastructures/  # インフラストラクチャ
+      - repositories/   # データリポジトリ
+      - firebase/        # Firebase関連
+      - log/            # log
+    - presentation/    # UIコンポーネント
+      - pages/          # view, vm
+      - widgets/        # ウィジェット
+    - main.dart       # アプリケーションエントリーポイント
 - 保守性、拡張性を重視し、機能ごとにディレクトリを分ける。
