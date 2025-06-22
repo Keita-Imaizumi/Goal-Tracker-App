@@ -23,26 +23,6 @@ class GoalViewModel extends _$GoalViewModel {
   AsyncValue<void> build() {
     return const AsyncData(null);
   }
-
-  Future<void> addGoal(Goal goal, String userId) async {
-    // 入力検証（タイトルが空）
-    if (goal.title
-        .trim()
-        .isEmpty) {
-      state = AsyncError('タイトルは必須です', StackTrace.current);
-      return;
-    }
-
-    state = const AsyncLoading();
-    try {
-      final repository = ref.read(goalRepositoryProvider);
-      await repository.addGoal(userId, goal);
-      state = const AsyncData(null);
-    } catch (e, st) {
-      state = AsyncError(e, st);
-      rethrow;
-    }
-  }
   //ゴール新規作成メソッド（クリーンアーキテクチャ導入Ver）
   Future<void> createGoal({
     required String title,
@@ -73,11 +53,12 @@ class GoalViewModel extends _$GoalViewModel {
     }
   }
 
-  Future<void> deleteGoal(String userId, String goalId) async {
+  Future<void> deleteGoal(String goalId) async {
+    final user = ref.read(userStateProvider);
     state = const AsyncLoading();
     try {
       final repository = ref.read(goalRepositoryProvider);
-      await repository.deleteGoal(userId, goalId);
+      await repository.deleteGoal(user!.uid, goalId);
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);

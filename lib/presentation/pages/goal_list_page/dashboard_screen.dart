@@ -54,7 +54,7 @@ class DashboardScreen extends ConsumerWidget {
               subtitle: Text('詳細: ${goal.detail}'),
               onLongPress: () async {
                 if (user == null) return;
-                await ref.read(goalViewModelProvider.notifier).deleteGoal(user.uid, goal.id);
+                await ref.read(goalViewModelProvider.notifier).deleteGoal(goal.id);
               },
               onTap: () {
                 showGoalBottomSheet(context: context, ref: ref, goal: goal);
