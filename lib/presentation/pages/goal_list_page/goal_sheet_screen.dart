@@ -209,7 +209,13 @@ Future<void> showGoalBottomSheet({
                             tasks: subTasks,
                           );
                           if (goal == null) {
-                            await ref.read(goalViewModelProvider.notifier).addGoal(newGoal, user.uid);
+                            // await ref.read(goalViewModelProvider.notifier).addGoal(newGoal, user.uid);
+                            await ref.read(goalViewModelProvider.notifier).createGoal(
+                              title:titleController.text,
+                              detail:detailController.text,
+                              deadline:selectedDate,
+                              tags: selectedTags,
+                            );
                           } else {
                             await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, newGoal);
                           }

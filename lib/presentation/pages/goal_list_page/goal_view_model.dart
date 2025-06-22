@@ -1,14 +1,24 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../features/auth/provider/auth_provider.dart';
 
 import '../../../domains/entities/goal/goal.dart';
+import '../../../domains/entities/tag/tag.dart';
 import '../../../infrastructures/repositories/goal_repository.dart';
+import '../../../application/usecases/create_goal.dart';
+import '../../../domains/features/goal_creater.dart';
 
 part 'goal_view_model.g.dart';
 
+final createGoalUseCaseProvider = Provider<CreateGoalUsecase>((ref) {
+  final goalCreator = GoalCreator();
+  final goalRepository = ref.read(goalRepositoryProvider);
+  return CreateGoalUsecase(goalCreator, goalRepository);
+});
+
 @riverpod
 class GoalViewModel extends _$GoalViewModel {
+  late final CreateGoalUsecase _createGoalUseCase = ref.read(createGoalUseCaseProvider);
+
   @override
   AsyncValue<void> build() {
     return const AsyncData(null);
@@ -27,6 +37,35 @@ class GoalViewModel extends _$GoalViewModel {
     try {
       final repository = ref.read(goalRepositoryProvider);
       await repository.addGoal(userId, goal);
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+  //ゴール新規作成メソッド（クリーンアーキテクチャ導入Ver）
+  Future<void> createGoal({
+    required String title,
+    String? detail,
+    DateTime? deadline,
+    List<Tag> tags = const [],
+  }) async {
+    final user = ref.read(userStateProvider);    
+    // 入力検証（タイトルが空）
+    if (title.trim().isEmpty) {
+      state = AsyncError('タイトルは必須です', StackTrace.current);
+      return;
+    }
+
+    state = const AsyncLoading();
+    try {
+      await _createGoalUseCase.createNewGoal(
+        userId: user!.uid,
+        title: title,
+        detail: detail,
+        deadline: deadline,
+        tags: tags,
+      ); 
       state = const AsyncData(null);
     } catch (e, st) {
       state = AsyncError(e, st);
