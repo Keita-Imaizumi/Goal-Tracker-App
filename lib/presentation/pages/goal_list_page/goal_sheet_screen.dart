@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../../../features/auth/provider/auth_provider.dart';
 import '../../../domains/entities/goal/goal.dart';
 import '../../../domains/entities/tag/tag.dart';
+import '../../../domains/entities/task/task.dart';
 import 'goal_view_model.dart';
 import 'tag_view_model.dart';
 

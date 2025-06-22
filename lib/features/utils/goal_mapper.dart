@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domains/entities/goal/goal.dart';
 import '../../domains/entities/tag/tag.dart';
+import '../../domains/entities/task/task.dart';
 
 Goal goalFromFirestore(String id, Map<String, dynamic> data) {
   return Goal(
