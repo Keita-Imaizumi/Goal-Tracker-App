@@ -5,7 +5,9 @@ import '../../../domains/entities/goal/goal.dart';
 import '../../../domains/entities/tag/tag.dart';
 import '../../../infrastructures/repositories/goal_repository.dart';
 import '../../../application/usecases/create_goal.dart';
-import '../../../domains/features/goal_creater.dart';
+import '../../../application/usecases/update_goal.dart';
+import '../../../domains/features/goal_creator.dart';
+import '../../../domains/features/goal_updater.dart';
 
 part 'goal_view_model.g.dart';
 
@@ -15,9 +17,16 @@ final createGoalUseCaseProvider = Provider<CreateGoalUsecase>((ref) {
   return CreateGoalUsecase(goalCreator, goalRepository);
 });
 
+final updateGoalUseCaseProvider = Provider<UpdateGoalUsecase>((ref) {
+  final goalUpdater = GoalUpdater();
+  final goalRepository = ref.read(goalRepositoryProvider);
+  return UpdateGoalUsecase(goalUpdater, goalRepository);
+});
+
 @riverpod
 class GoalViewModel extends _$GoalViewModel {
   late final CreateGoalUsecase _createGoalUseCase = ref.read(createGoalUseCaseProvider);
+  late final UpdateGoalUsecase _updateGoalUseCase = ref.read(updateGoalUseCaseProvider);
 
   @override
   AsyncValue<void> build() {
@@ -33,7 +42,7 @@ class GoalViewModel extends _$GoalViewModel {
     final user = ref.read(userStateProvider);    
     state = const AsyncLoading();
     try {
-      await _createGoalUseCase.createNewGoal(
+      await _createGoalUseCase.createGoal(
         userId: user!.uid,
         title: title,
         detail: detail,
@@ -59,9 +68,29 @@ class GoalViewModel extends _$GoalViewModel {
     }
   }
 
-  Future<void> updateGoal(String userId, Goal goal) async {
-    final repository = ref.read(goalRepositoryProvider);
-    await repository.updateGoal(userId, goal);
+  Future<void> updateGoal({
+    required Goal oldGoal,
+    required String title,
+    String? detail,
+    DateTime? deadline,
+    List<Tag> tags = const [],}
+    ) async {
+      final user = ref.read(userStateProvider);    
+      state = const AsyncLoading();
+      try {
+        await _updateGoalUseCase.updateGoal(
+          oldGoal: oldGoal,
+          userId: user!.uid,
+          title: title,
+          detail: detail,
+          deadline: deadline,
+          tags: tags,
+        ); 
+        state = const AsyncData(null);
+      } catch (e, st) {
+        state = AsyncError(e, st);
+        rethrow;
+      }
   }
 
   Future<void> toggleDone(String userId, Goal goal) async {

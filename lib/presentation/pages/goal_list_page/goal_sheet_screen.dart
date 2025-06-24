@@ -199,14 +199,6 @@ Future<void> showGoalBottomSheet({
                       ElevatedButton(
                         onPressed: () async {
                           try {
-                            final newGoal = Goal(
-                              id: goal?.id ?? const Uuid().v4(),
-                              title: titleController.text,
-                              detail: detailController.text,
-                              deadline: selectedDate,
-                              tags: selectedTags,
-                              tasks: subTasks,
-                            );
                             if (goal == null) {
                               await ref.read(goalViewModelProvider.notifier).createGoal(
                                 title: titleController.text,
@@ -215,7 +207,13 @@ Future<void> showGoalBottomSheet({
                                 tags: selectedTags,
                               );
                             } else {
-                              await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, newGoal);
+                              await ref.read(goalViewModelProvider.notifier).updateGoal(
+                                oldGoal: goal,
+                                title: titleController.text,
+                                detail: detailController.text,
+                                deadline: selectedDate,
+                                tags: selectedTags,
+                                );
                             }
                             final updatedState = ref.read(goalViewModelProvider);
                             if (updatedState is! AsyncError && context.mounted) {
