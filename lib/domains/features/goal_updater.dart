@@ -1,7 +1,6 @@
 import '../../../domains/entities/goal/goal.dart';
 import '../../../domains/entities/tag/tag.dart';
 
-import 'package:uuid/uuid.dart';
 // Goalを更新するためのクラス
 class GoalUpdater {
   Goal updateGoal(
