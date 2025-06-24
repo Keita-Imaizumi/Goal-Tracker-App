@@ -25,6 +25,9 @@ Future<void> showGoalBottomSheet({
   DateTime? selectedDate = goal?.deadline;
   List<Task> subTasks = List.from(goal?.tasks ?? []);
 
+  // StatefulBuilderの外で宣言し、setStateで更新できるようにする
+  String? errorMessage;
+
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -34,12 +37,6 @@ Future<void> showGoalBottomSheet({
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
-          final error = ref.watch(goalViewModelProvider);
-          String? errorMessage;
-          if (error is AsyncError && error.error is String) {
-            errorMessage = error.error as String;
-          }
-
           return Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -59,7 +56,14 @@ Future<void> showGoalBottomSheet({
 
                   TextField(
                     controller: titleController,
-                    decoration: const InputDecoration(labelText: 'タイトル'),
+                    decoration: InputDecoration(
+                      labelText: (errorMessage?.isNotEmpty ?? false)
+                          ? '$errorMessage'
+                          : 'タイトル',
+                      labelStyle: (errorMessage?.isNotEmpty ?? false)
+                          ? const TextStyle(color: Colors.red)
+                          : null,
+                    ),
                   ),
                   TextField(
                     controller: detailController,
@@ -183,12 +187,6 @@ Future<void> showGoalBottomSheet({
                       },
                     ),
 
-                  if (errorMessage != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(errorMessage, style: const TextStyle(color: Colors.red)),
-                    ),
-
                   const SizedBox(height: 16),
 
                   Row(
@@ -200,29 +198,33 @@ Future<void> showGoalBottomSheet({
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          final newGoal = Goal(
-                            id: goal?.id ?? const Uuid().v4(),
-                            title: titleController.text,
-                            detail: detailController.text,
-                            deadline: selectedDate,
-                            tags: selectedTags,
-                            tasks: subTasks,
-                          );
-                          if (goal == null) {
-                            // await ref.read(goalViewModelProvider.notifier).addGoal(newGoal, user.uid);
-                            await ref.read(goalViewModelProvider.notifier).createGoal(
-                              title:titleController.text,
-                              detail:detailController.text,
-                              deadline:selectedDate,
+                          try {
+                            final newGoal = Goal(
+                              id: goal?.id ?? const Uuid().v4(),
+                              title: titleController.text,
+                              detail: detailController.text,
+                              deadline: selectedDate,
                               tags: selectedTags,
+                              tasks: subTasks,
                             );
-                          } else {
-                            await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, newGoal);
-                          }
-
-                          final updatedState = ref.read(goalViewModelProvider);
-                          if (updatedState is! AsyncError && context.mounted) {
-                            Navigator.of(context).pop();
+                            if (goal == null) {
+                              await ref.read(goalViewModelProvider.notifier).createGoal(
+                                title: titleController.text,
+                                detail: detailController.text,
+                                deadline: selectedDate,
+                                tags: selectedTags,
+                              );
+                            } else {
+                              await ref.read(goalViewModelProvider.notifier).updateGoal(user.uid, newGoal);
+                            }
+                            final updatedState = ref.read(goalViewModelProvider);
+                            if (updatedState is! AsyncError && context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          } catch (e) {
+                            setState(() {
+                              errorMessage = e.toString().replaceFirst('Exception: ', '');
+                            });
                           }
                         },
                         child: Text(goal == null ? '作成' : '保存'),

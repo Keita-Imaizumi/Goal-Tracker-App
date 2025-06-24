@@ -31,12 +31,6 @@ class GoalViewModel extends _$GoalViewModel {
     List<Tag> tags = const [],
   }) async {
     final user = ref.read(userStateProvider);    
-    // 入力検証（タイトルが空）
-    if (title.trim().isEmpty) {
-      state = AsyncError('タイトルは必須です', StackTrace.current);
-      return;
-    }
-
     state = const AsyncLoading();
     try {
       await _createGoalUseCase.createNewGoal(

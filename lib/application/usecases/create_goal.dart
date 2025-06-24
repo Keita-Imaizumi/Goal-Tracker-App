@@ -1,6 +1,7 @@
 import "../../domains/features/goal_creater.dart";
 import "../../domains/Irepositories/goal_repository.dart";
 import "../../domains/entities/tag/tag.dart";
+import "../../domains/features/goal_validator.dart";
 
 class CreateGoalUsecase {
   final GoalCreator _creator;
@@ -14,6 +15,8 @@ class CreateGoalUsecase {
     DateTime? deadline,
     List<Tag> tags = const [],
   }) async {
+    // 入力値検証
+    GoalValidator.validateTitleOrThrow(title);
     final newGoal = _creator.createGoal(
       title,
       detail: detail,
