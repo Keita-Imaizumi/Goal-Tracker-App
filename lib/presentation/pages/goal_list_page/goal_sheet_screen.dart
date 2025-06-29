@@ -197,33 +197,24 @@ Future<void> showGoalBottomSheet({
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          try {
-                            if (goal == null) {
-                              await ref.read(goalViewModelProvider.notifier).createGoal(
-                                title: titleController.text,
-                                detail: detailController.text,
-                                deadline: selectedDate,
-                                tags: selectedTags,
-                              );
-                            } else {
-                              await ref.read(goalViewModelProvider.notifier).updateGoal(
+                            try {
+                              await ref.read(goalViewModelProvider.notifier).saveGoal(
                                 oldGoal: goal,
                                 title: titleController.text,
                                 detail: detailController.text,
                                 deadline: selectedDate,
                                 tags: selectedTags,
-                                );
+                              );
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            } catch (e) {
+                              setState(() {
+                                errorMessage = e.toString().replaceFirst('Exception: ', '');
+                              });
                             }
-                            final updatedState = ref.read(goalViewModelProvider);
-                            if (updatedState is! AsyncError && context.mounted) {
-                              Navigator.of(context).pop();
-                            }
-                          } catch (e) {
-                            setState(() {
-                              errorMessage = e.toString().replaceFirst('Exception: ', '');
-                            });
-                          }
-                        },
+                          },
                         child: Text(goal == null ? '作成' : '保存'),
                       ),
                     ],

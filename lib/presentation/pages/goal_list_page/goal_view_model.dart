@@ -93,6 +93,42 @@ class GoalViewModel extends _$GoalViewModel {
       }
   }
 
+  Future<void> saveGoal({
+  Goal? oldGoal,
+  required String title,
+  String? detail,
+  DateTime? deadline,
+  List<Tag> tags = const [],
+}) async {
+  final user = ref.read(userStateProvider);
+  state = const AsyncLoading();
+
+  try {
+    if (oldGoal == null) {
+      await _createGoalUseCase.createGoal(
+        userId: user!.uid,
+        title: title,
+        detail: detail,
+        deadline: deadline,
+        tags: tags,
+      );
+    } else {
+      await _updateGoalUseCase.updateGoal(
+        oldGoal: oldGoal,
+        userId: user!.uid,
+        title: title,
+        detail: detail,
+        deadline: deadline,
+        tags: tags,
+      );
+    }
+    state = const AsyncData(null);
+  } catch (e, st) {
+    state = AsyncError(e, st);
+    rethrow;
+  }
+}
+
   Future<void> toggleDone(String userId, Goal goal) async {
     final repository = ref.read(goalRepositoryProvider);
     final updatedGoal = goal.copyWith(done: !goal.done);
